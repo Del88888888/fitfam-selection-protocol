@@ -13,41 +13,39 @@ body {
   padding: 40px;
 }
 
-/* BIG TEXT */
+/* HUGE TEXT */
 h1 {
   color: #FFD200;
-  font-size: 120px;
+  font-size: 110px;
 }
 
 h2 {
-  font-size: 90px;
+  font-size: 80px;
 }
 
 h3 {
-  font-size: 70px;
+  font-size: 60px;
 }
 
 p {
-  font-size: 55px;
-  line-height: 1.6;
+  font-size: 50px;
+  line-height: 1.5;
 }
 
 /* BUTTON */
 button {
   font-size: 60px;
-  padding: 30px 60px;
+  padding: 25px 50px;
   margin-top: 30px;
-  border-radius: 15px;
 }
 
 /* INPUT */
 input {
   font-size: 60px;
   padding: 20px;
-  width: 250px;
+  width: 260px;
   text-align: center;
   margin: 20px;
-  border-radius: 15px;
 }
 
 /* HIDE */
@@ -85,9 +83,9 @@ Welcome to the Selection Protocol.<br><br>
 
 Complete each challenge in any order.<br><br>
 
-Enter results after each station so you do not forget.<br><br>
+Enter results after each station.<br><br>
 
-Submit when all are completed.<br><br>
+Submit when completed.<br><br>
 
 A final phase will be revealed.
 </p>
@@ -102,7 +100,7 @@ A final phase will be revealed.
 <h2>ENTER RESULTS</h2>
 
 <p>Push-Ups</p>
-<input id="push" placeholder="">
+<input id="push">
 
 <p>Sit-Ups</p>
 <input id="sit">
@@ -132,7 +130,7 @@ Hold position.<br>
 Await instruction.
 </p>
 
-<h1 id="timer" style="font-size:220px; color:#FFD200;">00:00</h1>
+<h1 id="timer" style="font-size:200px; color:#FFD200;">00:00</h1>
 
 <p>Start timer → hold → stop when done</p>
 
@@ -144,7 +142,7 @@ Await instruction.
 <!-- RESULT -->
 <div id="resultScreen" class="hidden">
 
-<img src="IMG_1495.jpg" width="250"><br><br>
+<img src="IMG_1495.jpg" width="200"><br><br>
 
 <h2>RESULT</h2>
 
@@ -157,13 +155,13 @@ Await instruction.
 let plank = 0;
 let timer = null;
 
-/* BEGIN */
+/* BEGIN BUTTON FIXED */
 function start() {
   document.getElementById("intro").style.display = "none";
   document.getElementById("inputScreen").style.display = "block";
 }
 
-/* GO TO FINAL */
+/* GO FINAL */
 function goFinal() {
   document.getElementById("inputScreen").style.display = "none";
   document.getElementById("finalPhase").style.display = "block";
@@ -171,9 +169,47 @@ function goFinal() {
 
 /* TIMER START */
 function startTimer() {
-
   if (timer) return;
 
   timer = setInterval(function () {
     plank++;
 
+    let m = String(Math.floor(plank / 60)).padStart(2, '0');
+    let s = String(plank % 60).padStart(2, '0');
+
+    document.getElementById("timer").innerHTML = m + ":" + s;
+
+  }, 1000);
+}
+
+/* TIMER STOP */
+function stopTimer() {
+
+  clearInterval(timer);
+
+  let push = document.getElementById("push").value;
+  let sit = document.getElementById("sit").value;
+  let squat = document.getElementById("squat").value;
+  let run = document.getElementById("run").value;
+
+  let id = Math.floor(1000 + Math.random() * 9000);
+
+  document.getElementById("finalPhase").style.display = "none";
+  document.getElementById("resultScreen").style.display = "block";
+
+  document.getElementById("output").innerHTML =
+
+    "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
+    "OPERATOR-" + id + "<br><br>" +
+    "Push-ups: " + push + "<br>" +
+    "Sit-ups: " + sit + "<br>" +
+    "Squats: " + squat + "<br>" +
+    "Shuttle: " + run + "<br>" +
+    "Plank: " + plank + " sec";
+
+}
+
+</script>
+
+</body>
+</html>
