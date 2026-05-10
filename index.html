@@ -13,44 +13,40 @@ body {
   padding: 40px;
 }
 
-/* VERY LARGE HEADINGS */
+/* BIG TEXT */
 h1 {
   color: #FFD200;
   font-size: 120px;
-  margin-bottom: 20px;
 }
 
 h2 {
   font-size: 90px;
-  margin: 25px 0;
 }
 
 h3 {
-  font-size: 65px;
-  margin-bottom: 30px;
-}
-
-/* VERY LARGE TEXT */
-p {
-  font-size: 65px;
-  line-height: 1.6;
-  margin: 30px 0;
-}
-
-/* BUTTONS */
-button {
   font-size: 70px;
-  padding: 35px 70px;
+}
+
+p {
+  font-size: 55px;
+  line-height: 1.6;
+}
+
+/* BUTTON */
+button {
+  font-size: 60px;
+  padding: 30px 60px;
   margin-top: 30px;
   border-radius: 15px;
 }
 
 /* INPUT */
 input {
-  font-size: 70px;
-  padding: 25px;
-  width: 260px;
+  font-size: 60px;
+  padding: 20px;
+  width: 250px;
   text-align: center;
+  margin: 20px;
   border-radius: 15px;
 }
 
@@ -82,61 +78,51 @@ input {
 <!-- INTRO -->
 <div id="intro">
 
-<img src="IMG_1495.jpg" width="300"><br><br>
+<img src="IMG_1495.jpg" width="250"><br><br>
 
 <p>
 Welcome to the Selection Protocol.<br><br>
 
-This assessment is based on real military fitness standards.<br><br>
+Complete each challenge in any order.<br><br>
 
-ACFT – U.S. Army fitness test<br>
-PST – Special forces screening test<br><br>
+Enter results after each station so you do not forget.<br><br>
 
-Complete each station and record your results.<br><br>
+Submit when all are completed.<br><br>
 
-A final phase will be revealed upon completion.
+A final phase will be revealed.
 </p>
 
 <button onclick="start()">BEGIN ASSESSMENT</button>
 
 </div>
 
-<!-- PUSHUPS -->
-<div id="push" class="hidden">
-<h2>PUSH-UPS</h2>
-<input id="pushInput">
+<!-- INPUT SCREEN -->
+<div id="inputScreen" class="hidden">
+
+<h2>ENTER RESULTS</h2>
+
+<p>Push-Ups</p>
+<input id="push" placeholder="">
+
+<p>Sit-Ups</p>
+<input id="sit">
+
+<p>Squats</p>
+<input id="squat">
+
+<p>Shuttle Runs</p>
+<input id="run">
+
 <br>
-<button onclick="next('push','sit')">SAVE & CONTINUE</button>
+
+<button onclick="goFinal()">SUBMIT ALL RESULTS</button>
+
 </div>
 
-<!-- SITUPS -->
-<div id="sit" class="hidden">
-<h2>SIT-UPS</h2>
-<input id="sitInput">
-<br>
-<button onclick="next('sit','squat')">SAVE & CONTINUE</button>
-</div>
+<!-- FINAL PHASE -->
+<div id="finalPhase" class="hidden">
 
-<!-- SQUATS -->
-<div id="squat" class="hidden">
-<h2>SQUATS</h2>
-<input id="squatInput">
-<br>
-<button onclick="next('squat','run')">SAVE & CONTINUE</button>
-</div>
-
-<!-- SHUTTLE -->
-<div id="run" class="hidden">
-<h2>SHUTTLE RUN</h2>
-<input id="runInput">
-<br>
-<button onclick="finalPhase()">SAVE & CONTINUE</button>
-</div>
-
-<!-- FINAL -->
-<div id="final" class="hidden">
-
-<img src="IMG_1495.jpg" width="250"><br><br>
+<img src="IMG_1495.jpg" width="200"><br><br>
 
 <h2>FINAL PHASE INITIATED</h2>
 
@@ -148,7 +134,7 @@ Await instruction.
 
 <h1 id="timer" style="font-size:220px; color:#FFD200;">00:00</h1>
 
-<p>Start timer, then begin. Stop immediately when you drop.</p>
+<p>Start timer → hold → stop when done</p>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
@@ -156,7 +142,7 @@ Await instruction.
 </div>
 
 <!-- RESULT -->
-<div id="result" class="hidden">
+<div id="resultScreen" class="hidden">
 
 <img src="IMG_1495.jpg" width="250"><br><br>
 
@@ -169,18 +155,25 @@ Await instruction.
 <script>
 
 let plank = 0;
-let interval;
+let timer = null;
 
-/* START */
+/* BEGIN */
 function start() {
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("push").classList.remove("hidden");
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("inputScreen").style.display = "block";
 }
 
-/* NEXT */
-function next(current, nextStage) {
-  document.getElementById(current).classList.add("hidden");
-  document.getElementById(nextStage).classList.remove("hidden");
+/* GO TO FINAL */
+function goFinal() {
+  document.getElementById("inputScreen").style.display = "none";
+  document.getElementById("finalPhase").style.display = "block";
 }
 
-/* FINAL */
+/* TIMER START */
+function startTimer() {
+
+  if (timer) return;
+
+  timer = setInterval(function () {
+    plank++;
+
