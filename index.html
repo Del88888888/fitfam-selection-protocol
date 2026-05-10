@@ -56,20 +56,23 @@ input, select {
 
 <!-- INTRO -->
 <div id="intro">
-  <div class="introBox">
-    <p>
-    Welcome to the Selection Protocol.<br><br>
 
-    This fitness assessment is based on real military standards:<br><br>
+<div class="introBox">
+<p>
+Welcome to the Selection Protocol.<br><br>
 
-    ACFT – U.S. Army Combat Fitness Test<br>
-    PST – Special Forces Screening Test<br><br>
+This fitness assessment is based on real military standards:<br><br>
 
-    Strength • Endurance • Conditioning
-    </p>
-  </div>
+ACFT – U.S. Army Combat Fitness Test<br>
+PST – Special Forces Screening Test<br><br>
 
-  <button onclick="start()">BEGIN ASSESSMENT</button>
+Strength • Endurance • Conditioning
+</p>
+</div>
+
+<!-- ✅ SIMPLE (WORKING) -->
+<button onclick="start()">BEGIN ASSESSMENT</button>
+
 </div>
 
 <!-- INPUT -->
@@ -103,7 +106,6 @@ input, select {
 <div id="finalScreen" class="hidden">
 
 <h2>FINAL PHASE</h2>
-
 <p>CORE STABILITY TEST<br>Hold position.</p>
 
 <h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
@@ -124,56 +126,50 @@ input, select {
 
 <script>
 
-let plank=0;
-let timer=null;
+let plank = 0;
+let timer = null;
 
-/* START */
+/* ✅ SIMPLE FUNCTIONS ONLY */
+
 function start(){
-  document.getElementById("intro").style.display="none";
-  document.getElementById("inputScreen").style.display="block";
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("inputScreen").style.display = "block";
 }
 
-/* GO FINAL */
 function goFinal(){
-  document.getElementById("inputScreen").style.display="none";
-  document.getElementById("finalScreen").style.display="block";
+  document.getElementById("inputScreen").style.display = "none";
+  document.getElementById("finalScreen").style.display = "block";
 }
 
-/* TIMER */
 function startTimer(){
   if(timer) return;
 
-  plank=0;
+  plank = 0;
 
-  timer=setInterval(()=>{
+  timer = setInterval(function(){
     plank++;
 
-    let m=String(Math.floor(plank/60)).padStart(2,'0');
-    let s=String(plank%60).padStart(2,'0');
+    let m = String(Math.floor(plank/60)).padStart(2,'0');
+    let s = String(plank%60).padStart(2,'0');
 
-    document.getElementById("timer").innerHTML = m+":"+s;
+    document.getElementById("timer").innerText = m + ":" + s;
 
   },1000);
 }
 
-/* SCORING */
-function getScore(val, base){
-  if(val < base*0.5) return 0;
-  if(val < base*0.7) return 1;
-  if(val < base) return 2;
-  if(val < base*1.2) return 3;
-  if(val < base*1.4) return 4;
-  return 5;
-}
+function stopTimer(){
 
-function label(score){
-  if(score===1) return "⚪ Emerging Athlete";
-  if(score===2) return "🔹 Performance Athlete";
-  if(score===3) return "✅ Operational Ready";
-  if(score===4) return "⭐ Elite Operator";
-  if(score===5) return "🔥 Special Forces Target";
-  return "";
-}
+  clearInterval(timer);
+  timer = null;
 
-function overallLabel(avg){
-  if(avg < 1.5) return "REBOOT";
+  let age = parseInt(document.getElementById("age").value) || 30;
+  let sex = document.getElementById("sex").value;
+
+  let push = parseInt(document.getElementById("push").value) || 0;
+  let sit = parseInt(document.getElementById("sit").value) || 0;
+  let squat = parseInt(document.getElementById("squat").value) || 0;
+  let run = parseInt(document.getElementById("run").value) || 0;
+
+  let basePush=35, baseSit=45, baseSquat=45, baseRun=12;
+
+  let factor = 1;
