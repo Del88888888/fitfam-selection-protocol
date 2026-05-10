@@ -97,7 +97,6 @@ Strength • Endurance • Conditioning
 
 <!-- FINAL -->
 <div id="finalScreen" class="hidden">
-
 <h2>FINAL PHASE</h2>
 <p>CORE STABILITY TEST</p>
 
@@ -121,10 +120,10 @@ Strength • Endurance • Conditioning
 
 <script>
 
-let plank=0;
-let timer=null;
+let plank = 0;
+let timer = null;
 
-/* NAVIGATION */
+/* ✅ NAVIGATION ALWAYS WORKS */
 function start(){
   document.getElementById("intro").style.display="none";
   document.getElementById("inputScreen").style.display="block";
@@ -136,3 +135,100 @@ function goFinal(){
 }
 
 /* TIMER */
+function startTimer(){
+  if(timer) return;
+
+  plank = 0;
+
+  timer = setInterval(function(){
+    plank++;
+
+    let m = Math.floor(plank / 60);
+    let s = plank % 60;
+
+    document.getElementById("timer").innerText =
+      (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+
+  },1000);
+}
+
+/* ✅ SAFE RESULT FUNCTION */
+function stopTimer(){
+
+  clearInterval(timer);
+  timer = null;
+
+  try {
+
+    let push = parseInt(document.getElementById("push").value) || 0;
+    let sit = parseInt(document.getElementById("sit").value) || 0;
+    let squat = parseInt(document.getElementById("squat").value) || 0;
+    let run = parseInt(document.getElementById("run").value) || 0;
+
+    function score(val, base){
+      if(val < base*0.5) return 0;
+      if(val < base*0.7) return 1;
+      if(val < base) return 2;
+      if(val < base*1.2) return 3;
+      if(val < base*1.4) return 4;
+      return 5;
+    }
+
+    function label(s){
+      if(s==1) return "⚪ Emerging Athlete";
+      if(s==2) return "🔹 Performance Athlete";
+      if(s==3) return "✅ Operational Ready";
+      if(s==4) return "⭐ Elite Operator";
+      if(s==5) return "🔥 Special Forces Target";
+      return "";
+    }
+
+    let ps=score(push,35);
+    let ss=score(sit,45);
+    let qs=score(squat,45);
+    let rs=score(run,12);
+    let pls=score(plank,150);
+
+    let avg=(ps+ss+qs+rs+pls)/5;
+
+    document.getElementById("finalScreen").style.display="none";
+    document.getElementById("resultScreen").style.display="block";
+
+    /* REBOOT */
+    if(avg < 1.5){
+      resultText.innerHTML =
+      "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
+      "Move more • Start small • Try again";
+    } else {
+      let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
+                   : avg<3.5 ? "✅ OPERATIONAL READY"
+                   : avg<4.5 ? "⭐ ELITE OPERATOR"
+                   : "🔥 SPECIAL FORCES TARGET";
+
+      resultText.innerHTML =
+      "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br>"+
+
+      "Push-Ups: "+push+" → "+label(ps)+"<br>"+
+      "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
+      "Squats: "+squat+" → "+label(qs)+"<br>"+
+      "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
+      "Plank: "+plank+" sec → "+label(pls);
+    }
+
+  } catch (e) {
+
+    /* ✅ FAIL SAFE */
+    document.getElementById("finalScreen").style.display="none";
+    document.getElementById("resultScreen").style.display="block";
+
+    resultText.innerHTML =
+    "<b>Error occurred</b><br>Please try again.";
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
