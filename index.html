@@ -10,50 +10,61 @@ body {
   color: white;
   font-family: Arial;
   text-align: center;
-  padding: 20px;
+  padding: 30px;
 }
 
+/* HEADINGS */
 h1 {
   color: #FFD200;
-  font-size: 50px;
+  font-size: 80px;
+  margin-bottom: 10px;
 }
 
 h2 {
-  font-size: 40px;
+  font-size: 60px;
+  margin: 15px 0;
 }
 
 h3 {
-  font-size: 30px;
+  font-size: 45px;
+  margin-bottom: 20px;
 }
 
+/* TEXT */
 p {
-  font-size: 26px;
-  line-height: 1.5;
+  font-size: 40px;
+  line-height: 1.6;
+  margin: 20px 0;
 }
 
+/* BUTTONS */
 button {
-  font-size: 28px;
-  padding: 15px 30px;
-  margin-top: 15px;
+  font-size: 45px;
+  padding: 25px 50px;
+  margin-top: 25px;
+  border-radius: 10px;
 }
 
+/* INPUT */
 input {
-  font-size: 28px;
-  padding: 15px;
-  width: 160px;
+  font-size: 45px;
+  padding: 20px;
+  width: 220px;
   text-align: center;
+  border-radius: 10px;
 }
 
+/* HIDDEN SECTIONS */
 .hidden {
   display: none;
 }
 
-/* Corner Logo */
+/* CORNER LOGO */
 .cornerLogo {
   position: fixed;
-  top: 10px;
-  right: 10px;
-  width: 70px;
+  top: 15px;
+  right: 15px;
+  width: 100px;
   opacity: 0.7;
 }
 </style>
@@ -71,7 +82,7 @@ input {
 <!-- INTRO -->
 <div id="intro">
 
-<img src="IMG_1495.jpg" width="150"><br><br>
+<img src="IMG_1495.jpg" width="200"><br><br>
 
 <p>
 Welcome to the Selection Protocol.<br><br>
@@ -95,3 +106,130 @@ A final phase will be revealed upon completion.
 <h2>PUSH-UPS (60s)</h2>
 <input id="pushInput">
 <br>
+<button onclick="next('push','sit')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SITUPS -->
+<div id="sit" class="hidden">
+<h2>SIT-UPS (60s)</h2>
+<input id="sitInput">
+<br>
+<button onclick="next('sit','squat')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SQUATS -->
+<div id="squat" class="hidden">
+<h2>SQUATS (60s)</h2>
+<input id="squatInput">
+<br>
+<button onclick="next('squat','run')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SHUTTLE -->
+<div id="run" class="hidden">
+<h2>SHUTTLE RUN</h2>
+<input id="runInput">
+<br>
+<button onclick="finalPhase()">SAVE & CONTINUE</button>
+</div>
+
+<!-- FINAL PHASE -->
+<div id="final" class="hidden">
+
+<img src="IMG_1495.jpg" width="180"><br><br>
+
+<h2>FINAL PHASE INITIATED</h2>
+
+<p>
+CORE STABILITY TEST<br><br>
+Hold position.<br>
+Await instruction.
+</p>
+
+<h1 id="timer" style="font-size:150px; color:#FFD200;">00:00</h1>
+
+<p>Start timer, then begin. Stop immediately when you drop.</p>
+
+<button onclick="startTimer()">START TIMER</button>
+<button onclick="stopTimer()">STOP & RECORD</button>
+
+</div>
+
+<!-- RESULT -->
+<div id="result" class="hidden">
+
+<img src="IMG_1495.jpg" width="160"><br><br>
+
+<h2>RESULT</h2>
+
+<p id="output" style="font-size:36px;"></p>
+
+</div>
+
+<script>
+
+let plank = 0;
+let interval;
+
+/* START */
+function start() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("push").classList.remove("hidden");
+}
+
+/* NEXT STAGE */
+function next(current, nextStage) {
+  document.getElementById(current).classList.add("hidden");
+  document.getElementById(nextStage).classList.remove("hidden");
+}
+
+/* FINAL PHASE */
+function finalPhase() {
+  document.getElementById("run").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+}
+
+/* TIMER */
+function startTimer() {
+  if (interval) return;
+
+  interval = setInterval(() => {
+    plank++;
+
+    let mins = String(Math.floor(plank / 60)).padStart(2, '0');
+    let secs = String(plank % 60).padStart(2, '0');
+
+    document.getElementById("timer").innerText = mins + ":" + secs;
+
+  }, 1000);
+}
+
+/* STOP + RESULT */
+function stopTimer() {
+  clearInterval(interval);
+
+  let push = document.getElementById("pushInput").value;
+  let sit = document.getElementById("sitInput").value;
+  let squat = document.getElementById("squatInput").value;
+  let run = document.getElementById("runInput").value;
+
+  let operatorID = Math.floor(1000 + Math.random() * 9000);
+
+  document.getElementById("final").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  document.getElementById("output").innerHTML =
+  "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
+  "You are designated <b>OPERATOR-" + operatorID + "</b><br><br>" +
+  "Push-ups: " + push + "<br>" +
+  "Sit-ups: " + sit + "<br>" +
+  "Squats: " + squat + "<br>" +
+  "Shuttle: " + run + "<br>" +
+  "Plank: " + plank + " sec";
+
+}
+
+</script>
+
+</body>
+</html>
