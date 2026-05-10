@@ -54,10 +54,10 @@ input {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
+<!-- INTRO -->
 <div id="intro">
 
 <div class="introBox">
-
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -69,13 +69,13 @@ PST – Special Forces Screening Test<br><br>
 You will complete a series of challenges measuring:<br>
 Strength • Endurance • Conditioning
 </p>
-
 </div>
 
 <button id="beginBtn">BEGIN ASSESSMENT</button>
 
 </div>
 
+<!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
 <h2>ENTER RESULTS</h2>
@@ -90,6 +90,7 @@ Strength • Endurance • Conditioning
 
 </div>
 
+<!-- FINAL -->
 <div id="finalScreen" class="hidden">
 
 <h2>FINAL PHASE INITIATED</h2>
@@ -106,6 +107,7 @@ Hold position.
 
 </div>
 
+<!-- RESULT -->
 <div id="resultScreen" class="hidden">
 
 <h2>RESULT</h2>
@@ -116,39 +118,39 @@ Hold position.
 
 <script>
 
-/* BEGIN BUTTON */
-document.getElementById("beginBtn").addEventListener("click", function() {
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("inputScreen").style.display = "block";
-});
+/* ✅ FIX: WAIT UNTIL PAGE FULLY LOADS */
+window.onload = function() {
+
+  document.getElementById("beginBtn").addEventListener("click", function() {
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("inputScreen").style.display = "block";
+  });
+
+};
 
 let plank = 0;
 let timer = null;
 
-/* GO FINAL */
 function goFinal() {
   document.getElementById("inputScreen").style.display = "none";
   document.getElementById("finalScreen").style.display = "block";
 }
 
-/* TIMER START */
 function startTimer() {
 
   if (timer) return;
 
   timer = setInterval(function() {
-
     plank++;
 
-    let m = String(Math.floor(plank / 60)).padStart(2, '0');
-    let s = String(plank % 60)).padStart(2, '0');
+    let m = String(Math.floor(plank / 60)).padStart(2,'0');
+    let s = String(plank % 60).padStart(2,'0');
 
     document.getElementById("timer").innerHTML = m + ":" + s;
 
   }, 1000);
 }
 
-/* TIMER STOP */
 function stopTimer() {
 
   clearInterval(timer);
@@ -165,11 +167,8 @@ function stopTimer() {
   document.getElementById("resultScreen").style.display = "block";
 
   document.getElementById("resultText").innerHTML =
-
   "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
-
   "OPERATOR-" + id + "<br><br>" +
-
   "Push-Ups: " + push + "<br>" +
   "Sit-Ups: " + sit + "<br>" +
   "Squats: " + squat + "<br>" +
