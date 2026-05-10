@@ -46,7 +46,6 @@ input, select {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
-<!-- INTRO -->
 <div id="intro">
 <div class="introBox">
 <p>
@@ -64,7 +63,6 @@ Strength • Endurance • Conditioning
 <button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
-<!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
 <h2>ENTER DETAILS</h2>
@@ -90,7 +88,6 @@ Strength • Endurance • Conditioning
 
 </div>
 
-<!-- FINAL -->
 <div id="finalScreen" class="hidden">
 <h2>FINAL PHASE</h2>
 <p>CORE STABILITY TEST<br>Hold position.</p>
@@ -101,7 +98,6 @@ Strength • Endurance • Conditioning
 <button onclick="stopTimer()">STOP</button>
 </div>
 
-<!-- RESULT -->
 <div id="resultScreen" class="hidden">
 <h2>RESULT</h2>
 <p id="resultText"></p>
@@ -112,23 +108,20 @@ Strength • Endurance • Conditioning
 let plank=0;
 let timer=null;
 
-/* START */
 function start(){
   document.getElementById("intro").style.display="none";
   document.getElementById("inputScreen").style.display="block";
 }
 
-/* FINAL */
 function goFinal(){
   document.getElementById("inputScreen").style.display="none";
   document.getElementById("finalScreen").style.display="block";
 }
 
-/* TIMER */
 function startTimer(){
   if(timer) return;
 
-  plank = 0;
+  plank=0;
 
   timer=setInterval(()=>{
     plank++;
@@ -137,20 +130,18 @@ function startTimer(){
     let s=String(plank%60).padStart(2,'0');
 
     document.getElementById("timer").innerHTML=m+":"+s;
-
   },1000);
 }
 
-/* SCORING */
+/* ✅ ICON-BASED LEVEL */
 function level(val, base){
-  if(val < base*0.7) return "Emerging Athlete";
-  if(val < base) return "Performance Athlete";
-  if(val < base*1.2) return "Operational Ready ✅";
-  if(val < base*1.4) return "Elite Operator";
-  return "Special Forces Target";
+  if(val < base*0.7) return "⚪ Emerging Athlete";
+  if(val < base) return "🔹 Performance Athlete";
+  if(val < base*1.2) return "✅ Operational Ready";
+  if(val < base*1.4) return "⭐ Elite Operator";
+  return "🔥 Special Forces Target";
 }
 
-/* STOP + RESULT */
 function stopTimer(){
 
  clearInterval(timer);
@@ -164,10 +155,8 @@ function stopTimer(){
  let squat = parseInt(document.getElementById("squat").value) || 0;
  let run = parseInt(document.getElementById("run").value) || 0;
 
- /* BASELINES */
  let basePush=35, baseSit=45, baseSquat=45, baseRun=12, basePlank=150;
 
- /* ADJUSTMENT */
  let factor=1;
 
  if(sex==="female") factor*=0.85;
@@ -180,21 +169,21 @@ function stopTimer(){
  baseRun*=factor;
  basePlank*=factor;
 
- /* RESULTS */
  let p=level(push,basePush);
  let s=level(sit,baseSit);
  let sq=level(squat,baseSquat);
  let r=level(run,baseRun);
  let pl=level(plank,basePlank);
 
- let overall=[p,s,sq,r,pl].filter(x=>x.includes("Operational")).length>=3
-  ? "OPERATIONAL READY ✅"
-  : "IN DEVELOPMENT";
+ let overall = [p,s,sq,r,pl].filter(x=>x.includes("Operational")).length>=3
+  ? "✅ OPERATIONAL READY"
+  : "🔹 IN DEVELOPMENT";
 
  document.getElementById("finalScreen").style.display="none";
  document.getElementById("resultScreen").style.display="block";
 
- document.getElementById("resultText").innerHTML =
+ document.getElementById("resultText").innerHTML=
+
  "<b>STATUS: "+overall+"</b><br><br>" +
 
  "Push-Ups: "+push+" → "+p+"<br>" +
