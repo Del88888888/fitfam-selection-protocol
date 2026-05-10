@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FitFam Selection Protocol</title>
+<title>FitFam Selection Protocol</title>
 
-  <style>
-    body {
-      background: #0b0b0b;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-      padding: 40px;
-    }
+<style>
+body {
+  background: #0b0b0b;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 40px;
+}
 
-    h1 {
-      color: #FFD200;
-      font-size: 100px;
-    }
+/* HEADINGS */
+h1 {
+  color: #FFD200;
+  font-size: 100px;
+}
+h2 {
+  font-size: 70px;
+}
+h3 {
+  font-size: 50px;
+}
 
-    h2 {
-      font-size: 70px;
-    }
+/* TEXT */
+p {
+  font-size: 45px;
+  line-height: 1.6;
+}
 
-    h3 {
-      font-size: 50px;
-    }
+/* BUTTON (YELLOW) */
+button {
+  font-size: 45px;
+  padding: 20px 40px;
+  margin-top: 30px;
+  background-color: #FFD200;
+  color: black;
+  border: none;
+  border-radius: 10px;
+}
 
-    p {
-      font-size: 45px;
-      line-height: 1.6;
-    }
+/* INPUT */
+input {
+  font-size: 45px;
+  padding: 15px;
+  width: 200px;
+  margin: 15px;
+  text-align: center;
+}
 
-    button {
-      font-size: 50px;
-      padding: 25px 50px;
-      margin-top: 30px;
-    }
-
-    input {
-      font-size: 50px;
-      padding: 15px;
-      width: 200px;
-      margin: 20px;
-      text-align: center;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+/* HIDE */
+.hidden {
+  display: none;
+}
+</style>
 </head>
 
 <body>
@@ -62,21 +69,20 @@
 <p>
 Welcome to the Selection Protocol.<br><br>
 
-This fitness assessment is based on real military standards, including:<br><br>
+This fitness assessment is based on real military standards:<br><br>
 
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Physical Screening Test<br><br>
 
-You will complete a series of challenges measuring:<br>
-Strength • Endurance • Conditioning<br><br>
+Complete all exercises in any order.<br>
+Record your results after each station.<br><br>
 
-Complete all stations in any order.<br>
-Enter your results after each exercise.<br><br>
+Submit when all are complete.<br><br>
 
-A final phase will be revealed upon submission.
+A final phase will be revealed.
 </p>
 
-<button onclick="startAssessment()">BEGIN ASSESSMENT</button>
+<button id="beginBtn">BEGIN ASSESSMENT</button>
 
 </div>
 
@@ -112,14 +118,14 @@ Hold position.<br>
 Await instruction.
 </p>
 
-<h1 id="timer" style="font-size:150px;">00:00</h1>
+<h1 id="timer" style="font-size:150px; color:#FFD200;">00:00</h1>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
 
 </div>
 
-<!-- RESULT SCREEN -->
+<!-- RESULT -->
 <div id="resultScreen" class="hidden">
 
 <h2>RESULT</h2>
@@ -130,9 +136,61 @@ Await instruction.
 
 <script>
 
-let plankTime = 0;
-let interval = null;
-
-/* BEGIN BUTTON (GUARANTEED WORKING) */
-function startAssessment() {
+/* IMPORTANT: BUTTON FIX */
+document.getElementById("beginBtn").addEventListener("click", function() {
   document.getElementById("intro").style.display = "none";
+  document.getElementById("inputScreen").style.display = "block";
+});
+
+let plank = 0;
+let timer = null;
+
+/* GO TO FINAL */
+function goFinal() {
+  document.getElementById("inputScreen").style.display = "none";
+  document.getElementById("finalScreen").style.display = "block";
+}
+
+/* TIMER */
+function startTimer() {
+  if (timer) return;
+
+  timer = setInterval(function() {
+    plank++;
+
+    let m = String(Math.floor(plank / 60)).padStart(2, '0');
+    let s = String(plank % 60).padStart(2, '0');
+
+    document.getElementById("timer").innerHTML = m + ":" + s;
+  }, 1000);
+}
+
+/* STOP */
+function stopTimer() {
+
+  clearInterval(timer);
+
+  let push = document.getElementById("push").value;
+  let sit = document.getElementById("sit").value;
+  let squat = document.getElementById("squat").value;
+  let run = document.getElementById("run").value;
+
+  let id = Math.floor(1000 + Math.random() * 9000);
+
+  document.getElementById("finalScreen").style.display = "none";
+  document.getElementById("resultScreen").style.display = "block";
+
+  document.getElementById("resultText").innerHTML =
+  "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
+  "OPERATOR-" + id + "<br><br>" +
+  "Push-Ups: " + push + "<br>" +
+  "Sit-Ups: " + sit + "<br>" +
+  "Squats: " + squat + "<br>" +
+  "Shuttle Runs: " + run + "<br>" +
+  "Plank: " + plank + " sec";
+}
+
+</script>
+
+</body>
+</html>
