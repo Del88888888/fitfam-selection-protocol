@@ -16,7 +16,7 @@ h1 { color:#FFD200; font-size:100px; }
 h2 { font-size:70px; }
 h3 { font-size:50px; }
 
-p { font-size:40px; line-height:1.5; }
+p { font-size:45px; line-height:1.6; }
 
 .introBox {
   border: 3px solid #FFD200;
@@ -27,7 +27,7 @@ p { font-size:40px; line-height:1.5; }
 }
 
 button {
-  font-size:40px;
+  font-size:45px;
   padding:20px 40px;
   margin-top:30px;
   background:#FFD200;
@@ -37,7 +37,7 @@ button {
 }
 
 input {
-  font-size:40px;
+  font-size:45px;
   padding:15px;
   width:200px;
   margin:15px;
@@ -55,149 +55,126 @@ input {
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
 <div id="intro">
+
 <div class="introBox">
+
 <p>
+Welcome to the Selection Protocol.<br><br>
+
 This fitness assessment is based on real military standards:<br><br>
+
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Screening Test<br><br>
-Strength • Endurance • Conditioning<br><br>
-A final phase will be revealed.
+
+You will complete a series of challenges measuring:<br>
+Strength • Endurance • Conditioning
 </p>
+
 </div>
 
 <button id="beginBtn">BEGIN ASSESSMENT</button>
+
 </div>
 
 <div id="inputScreen" class="hidden">
+
 <h2>ENTER RESULTS</h2>
 
 <p>Push-Ups</p><input id="push">
 <p>Sit-Ups</p><input id="sit">
 <p>Squats</p><input id="squat">
-<p>Shuttle</p><input id="run">
+<p>Shuttle Run</p><input id="run">
 
 <br><br><br>
 <button onclick="goFinal()">SUBMIT</button>
+
 </div>
 
 <div id="finalScreen" class="hidden">
-<h2>FINAL PHASE</h2>
-<p>CORE STABILITY TEST<br>Hold position.</p>
+
+<h2>FINAL PHASE INITIATED</h2>
+
+<p>
+CORE STABILITY TEST<br><br>
+Hold position.
+</p>
+
 <h1 id="timer" style="font-size:150px; color:#FFD200;">00:00</h1>
+
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
+
 </div>
 
 <div id="resultScreen" class="hidden">
+
 <h2>RESULT</h2>
+
 <p id="resultText"></p>
+
 </div>
 
 <script>
 
+/* BEGIN BUTTON */
 document.getElementById("beginBtn").addEventListener("click", function() {
-  intro.style.display="none";
-  inputScreen.style.display="block";
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("inputScreen").style.display = "block";
 });
 
-let plank=0, timer=null;
+let plank = 0;
+let timer = null;
 
+/* GO FINAL */
 function goFinal() {
-  inputScreen.style.display="none";
-  finalScreen.style.display="block";
+  document.getElementById("inputScreen").style.display = "none";
+  document.getElementById("finalScreen").style.display = "block";
 }
 
+/* TIMER START */
 function startTimer() {
+
   if (timer) return;
-  timer=setInterval(()=>{
+
+  timer = setInterval(function() {
+
     plank++;
-    let m=String(Math.floor(plank/60)).padStart(2,'0');
-    let s=String(plank%60).padStart(2,'0');
-    timerDisplay.innerHTML=m+":"+s;
-  },1000);
+
+    let m = String(Math.floor(plank / 60)).padStart(2, '0');
+    let s = String(plank % 60)).padStart(2, '0');
+
+    document.getElementById("timer").innerHTML = m + ":" + s;
+
+  }, 1000);
 }
 
+/* TIMER STOP */
 function stopTimer() {
 
   clearInterval(timer);
+  timer = null;
 
-  let push=parseInt(pushInput.value)||0;
-  let sit=parseInt(sitInput.value)||0;
-  let squat=parseInt(squatInput.value)||0;
-  let run=parseInt(runInput.value)||0;
+  let push = document.getElementById("push").value;
+  let sit = document.getElementById("sit").value;
+  let squat = document.getElementById("squat").value;
+  let run = document.getElementById("run").value;
 
-  function getLevel(val, ranges) {
-    for (let r of ranges) {
-      if (val>=r.min && val<=r.max) return r;
-    }
-    return ranges[ranges.length-1];
-  }
+  let id = Math.floor(1000 + Math.random() * 9000);
 
-  let levelsPush = [
-    {name:"Emerging",min:0,max:19,next:20},
-    {name:"Performance",min:20,max:29,next:30},
-    {name:"Operational Ready ✅",min:30,max:39,next:40},
-    {name:"Elite",min:40,max:49,next:50},
-    {name:"Special Forces",min:50,max:999,next:null}
-  ];
+  document.getElementById("finalScreen").style.display = "none";
+  document.getElementById("resultScreen").style.display = "block";
 
-  let levelsSit = [
-    {name:"Emerging",min:0,max:24,next:25},
-    {name:"Performance",min:25,max:39,next:40},
-    {name:"Operational Ready ✅",min:40,max:49,next:50},
-    {name:"Elite",min:50,max:59,next:60},
-    {name:"Special Forces",min:60,max:999,next:null}
-  ];
+  document.getElementById("resultText").innerHTML =
 
-  let levelsSquat = [
-    {name:"Emerging",min:0,max:29,next:30},
-    {name:"Performance",min:30,max:44,next:45},
-    {name:"Operational Ready ✅",min:45,max:59,next:60},
-    {name:"Elite",min:60,max:74,next:75},
-    {name:"Special Forces",min:75,max:999,next:null}
-  ];
+  "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
 
-  let levelsRun = [
-    {name:"Emerging",min:0,max:7,next:8},
-    {name:"Performance",min:8,max:11,next:12},
-    {name:"Operational Ready ✅",min:12,max:15,next:16},
-    {name:"Elite",min:16,max:19,next:20},
-    {name:"Special Forces",min:20,max:999,next:null}
-  ];
+  "OPERATOR-" + id + "<br><br>" +
 
-  let levelsPlank = [
-    {name:"Emerging",min:0,max:89,next:90},
-    {name:"Performance",min:90,max:149,next:150},
-    {name:"Operational Ready ✅",min:150,max:209,next:210},
-    {name:"Elite",min:210,max:299,next:300},
-    {name:"Special Forces",min:300,max:9999,next:null}
-  ];
-
-  let p=getLevel(push,levelsPush);
-  let s=getLevel(sit,levelsSit);
-  let sq=getLevel(squat,levelsSquat);
-  let r=getLevel(run,levelsRun);
-  let pl=getLevel(plank,levelsPlank);
-
-  function feedback(value, lvl) {
-    if (!lvl.next) return lvl.name+" ✅";
-    return lvl.name + " (+ "+(lvl.next-value)+" to next)";
-  }
-
-  let overall = [p,s,sq,r,pl].filter(x=>x.name.includes("Operational")).length >=3
-    ? "OPERATIONAL READY ✅"
-    : "IN DEVELOPMENT";
-
-  finalScreen.style.display="none";
-  resultScreen.style.display="block";
-
-  resultText.innerHTML =
-    "<b>STATUS: "+overall+"</b><br><br>" +
-    "Push-Ups: "+feedback(push,p)+"<br>" +
-    "Sit-Ups: "+feedback(sit,s)+"<br>" +
-    "Squats: "+feedback(sq.name,sq)+"<br>" +
-    "Shuttle: "+feedback(run,r)+"<br>" +
-    "Plank: "+feedback(plank,pl);
+  "Push-Ups: " + push + "<br>" +
+  "Sit-Ups: " + sit + "<br>" +
+  "Squats: " + squat + "<br>" +
+  "Shuttle Run: " + run + "<br>" +
+  "Plank: " + plank + " sec";
 
 }
 
