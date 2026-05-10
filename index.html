@@ -12,24 +12,24 @@ body {
   padding:40px;
 }
 
-h1 { color:#FFD200; font-size:95px; }
-h2 { font-size:72px; }
-h3 { font-size:52px; }
+h1 { color:#FFD200; font-size:80px; }
+h2 { font-size:60px; }
+h3 { font-size:40px; }
 
-p { font-size:48px; line-height:1.5; }
+p { font-size:30px; line-height:1.5; }
 
 .introBox {
   border:3px solid #FFD200;
-  padding:30px;
-  margin:30px auto;
-  width:85%;
+  padding:25px;
+  margin:25px auto;
+  width:90%;
   border-radius:15px;
 }
 
 button {
-  font-size:48px;
-  padding:20px 40px;
-  margin-top:30px;
+  font-size:30px;
+  padding:15px 30px;
+  margin-top:20px;
   background:#FFD200;
   color:black;
   border:none;
@@ -37,10 +37,10 @@ button {
 }
 
 input, select {
-  font-size:48px;
-  padding:12px;
-  width:220px;
-  margin:15px;
+  font-size:28px;
+  padding:10px;
+  width:180px;
+  margin:10px;
   text-align:center;
 }
 
@@ -52,7 +52,7 @@ input, select {
 
 <h1>FITFAM</h1>
 <h2>SELECTION PROTOCOL</h2>
-<h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
+<h3>ZERO HOUR</h3>
 
 <!-- INTRO -->
 <div id="intro">
@@ -61,8 +61,6 @@ input, select {
 <p>
 Welcome to the Selection Protocol.<br><br>
 
-This fitness assessment is based on real military standards:<br><br>
-
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Screening Test<br><br>
 
@@ -70,7 +68,7 @@ Strength • Endurance • Conditioning
 </p>
 </div>
 
-<!-- ✅ SIMPLE (WORKING) -->
+<!-- ✅ SIMPLE BUTTON -->
 <button onclick="start()">BEGIN ASSESSMENT</button>
 
 </div>
@@ -96,7 +94,7 @@ Strength • Endurance • Conditioning
 <p>Squats</p><input id="squat">
 <p>Shuttle Run</p><input id="run">
 
-<br><br><br><br>
+<br><br>
 
 <button onclick="goFinal()">SUBMIT</button>
 
@@ -106,9 +104,9 @@ Strength • Endurance • Conditioning
 <div id="finalScreen" class="hidden">
 
 <h2>FINAL PHASE</h2>
-<p>CORE STABILITY TEST<br>Hold position.</p>
+<p>CORE STABILITY TEST</p>
 
-<h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
+<h1 id="timer">00:00</h1>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
@@ -126,50 +124,66 @@ Strength • Endurance • Conditioning
 
 <script>
 
+/* STEP 1 */
+function start() {
+  document.getElementById("intro").style.display="none";
+  document.getElementById("inputScreen").style.display="block";
+}
+
+/* STEP 2 */
+function goFinal() {
+  document.getElementById("inputScreen").style.display="none";
+  document.getElementById("finalScreen").style.display="block";
+}
+
+/* TIMER */
 let plank = 0;
 let timer = null;
 
-/* ✅ SIMPLE FUNCTIONS ONLY */
-
-function start(){
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("inputScreen").style.display = "block";
-}
-
-function goFinal(){
-  document.getElementById("inputScreen").style.display = "none";
-  document.getElementById("finalScreen").style.display = "block";
-}
-
-function startTimer(){
-  if(timer) return;
+function startTimer() {
+  if (timer) return;
 
   plank = 0;
 
   timer = setInterval(function(){
     plank++;
 
-    let m = String(Math.floor(plank/60)).padStart(2,'0');
-    let s = String(plank%60).padStart(2,'0');
+    let m = Math.floor(plank / 60);
+    let s = plank % 60;
 
-    document.getElementById("timer").innerText = m + ":" + s;
+    document.getElementById("timer").innerText =
+      (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
 
-  },1000);
+  }, 1000);
 }
 
-function stopTimer(){
+function stopTimer() {
 
   clearInterval(timer);
   timer = null;
-
-  let age = parseInt(document.getElementById("age").value) || 30;
-  let sex = document.getElementById("sex").value;
 
   let push = parseInt(document.getElementById("push").value) || 0;
   let sit = parseInt(document.getElementById("sit").value) || 0;
   let squat = parseInt(document.getElementById("squat").value) || 0;
   let run = parseInt(document.getElementById("run").value) || 0;
 
-  let basePush=35, baseSit=45, baseSquat=45, baseRun=12;
+  document.getElementById("finalScreen").style.display="none";
+  document.getElementById("resultScreen").style.display="block";
 
-  let factor = 1;
+  /* SIMPLE RESULT FIRST (NO SCORING YET) */
+  document.getElementById("resultText").innerHTML =
+
+  "<b>Assessment Complete</b><br><br>" +
+
+  "Push-Ups: " + push + "<br>" +
+  "Sit-Ups: " + sit + "<br>" +
+  "Squats: " + squat + "<br>" +
+  "Shuttle Run: " + run + "<br>" +
+  "Plank: " + plank + " sec";
+
+}
+
+</script>
+
+</body>
+</html>
