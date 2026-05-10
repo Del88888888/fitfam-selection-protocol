@@ -4,39 +4,54 @@
 <title>FitFam Selection Protocol</title>
 
 <style>
-body { background:#0b0b0b; color:white; font-family:Arial; text-align:center; padding:40px; }
-h1 {color:#FFD200; font-size:100px;}
-h2 {font-size:70px;}
-h3 {font-size:50px;}
-p {font-size:40px; line-height:1.6;}
-
-.introBox {
-  border:3px solid #FFD200;
-  padding:30px;
-  margin:30px auto;
-  width:85%;
-  border-radius:15px;
+body {
+  background:#0b0b0b;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+  padding:50px;
 }
 
+/* SUPER LARGE HEADINGS */
+h1 { color:#FFD200; font-size:130px; }
+h2 { font-size:95px; }
+h3 { font-size:70px; }
+
+/* LARGE TEXT */
+p { font-size:65px; line-height:1.5; }
+
+/* INTRO BOX */
+.introBox {
+  border:4px solid #FFD200;
+  padding:40px;
+  margin:40px auto;
+  width:85%;
+  border-radius:20px;
+}
+
+/* BUTTON */
 button {
-  font-size:40px;
-  padding:20px 40px;
-  margin-top:30px;
+  font-size:65px;
+  padding:30px 60px;
+  margin-top:40px;
   background:#FFD200;
   color:black;
   border:none;
+  border-radius:15px;
+}
+
+/* INPUT */
+input, select {
+  font-size:65px;
+  padding:20px;
+  width:280px;
+  margin:20px;
+  text-align:center;
   border-radius:10px;
 }
 
-input, select {
-  font-size:40px;
-  padding:15px;
-  width:220px;
-  margin:15px;
-  text-align:center;
-}
-
-.hidden {display:none;}
+/* HIDE */
+.hidden { display:none; }
 </style>
 </head>
 
@@ -46,8 +61,10 @@ input, select {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
+<!-- INTRO -->
 <div id="intro">
 <div class="introBox">
+
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -58,11 +75,13 @@ PST – Special Forces Screening Test<br><br>
 
 Strength • Endurance • Conditioning
 </p>
+
 </div>
 
 <button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
+<!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
 <h2>ENTER DETAILS</h2>
@@ -88,19 +107,27 @@ Strength • Endurance • Conditioning
 
 </div>
 
+<!-- FINAL -->
 <div id="finalScreen" class="hidden">
+
 <h2>FINAL PHASE</h2>
+
 <p>CORE STABILITY TEST<br>Hold position.</p>
 
-<h1 id="timer" style="font-size:150px;color:#FFD200;">00:00</h1>
+<h1 id="timer" style="font-size:220px;color:#FFD200;">00:00</h1>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
+
 </div>
 
+<!-- RESULT -->
 <div id="resultScreen" class="hidden">
+
 <h2>RESULT</h2>
+
 <p id="resultText"></p>
+
 </div>
 
 <script>
@@ -133,7 +160,7 @@ function startTimer(){
   },1000);
 }
 
-/* ✅ ICON-BASED LEVEL */
+/* ICON LEVEL */
 function level(val, base){
   if(val < base*0.7) return "⚪ Emerging Athlete";
   if(val < base) return "🔹 Performance Athlete";
