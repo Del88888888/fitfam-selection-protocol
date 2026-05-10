@@ -56,21 +56,16 @@ input, select {
 
 <!-- INTRO -->
 <div id="intro">
-
 <div class="introBox">
 <p>
 Welcome to the Selection Protocol.<br><br>
-
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Screening Test<br><br>
-
 Strength • Endurance • Conditioning
 </p>
 </div>
 
-<!-- ✅ SIMPLE GUARANTEED BUTTON -->
 <button onclick="start()">BEGIN ASSESSMENT</button>
-
 </div>
 
 <!-- INPUT -->
@@ -126,110 +121,18 @@ Strength • Endurance • Conditioning
 
 <script>
 
-/* --- NAVIGATION --- */
-function start() {
+let plank=0;
+let timer=null;
+
+/* NAVIGATION */
+function start(){
   document.getElementById("intro").style.display="none";
   document.getElementById("inputScreen").style.display="block";
 }
 
-function goFinal() {
+function goFinal(){
   document.getElementById("inputScreen").style.display="none";
   document.getElementById("finalScreen").style.display="block";
 }
 
-/* --- TIMER --- */
-let plank = 0;
-let timer = null;
-
-function startTimer() {
-  if (timer) return;
-
-  plank = 0;
-
-  timer = setInterval(function() {
-    plank++;
-
-    let m = Math.floor(plank / 60);
-    let s = plank % 60;
-
-    document.getElementById("timer").innerText =
-      (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-
-  }, 1000);
-}
-
-/* --- STOP + RESULTS --- */
-function stopTimer() {
-
-  clearInterval(timer);
-  timer = null;
-
-  let push = parseInt(document.getElementById("push").value) || 0;
-  let sit = parseInt(document.getElementById("sit").value) || 0;
-  let squat = parseInt(document.getElementById("squat").value) || 0;
-  let run = parseInt(document.getElementById("run").value) || 0;
-
-  /* SCORING */
-  function score(val, base) {
-    if(val < base*0.5) return 0;
-    if(val < base*0.7) return 1;
-    if(val < base) return 2;
-    if(val < base*1.2) return 3;
-    if(val < base*1.4) return 4;
-    return 5;
-  }
-
-  function label(s) {
-    if(s==1) return "⚪ Emerging Athlete";
-    if(s==2) return "🔹 Performance Athlete";
-    if(s==3) return "✅ Operational Ready";
-    if(s==4) return "⭐ Elite Operator";
-    if(s==5) return "🔥 Special Forces Target";
-    return "";
-  }
-
-  let ps = score(push,35);
-  let ss = score(sit,45);
-  let qs = score(squat,45);
-  let rs = score(run,12);
-  let pls = score(plank,150);
-
-  let avg = (ps+ss+qs+rs+pls)/5;
-
-  document.getElementById("finalScreen").style.display="none";
-  document.getElementById("resultScreen").style.display="block";
-
-  /* --- REBOOT MODE --- */
-  if(avg < 1.5) {
-
-    document.getElementById("resultText").innerHTML =
-    "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
-    "Minimal movement detected<br>"+
-    "Physical systems appear to be in sleep mode.<br><br>"+
-    "<b>Recommendation:</b><br>"+
-    "• Move more<br>"+
-    "• Start small<br>"+
-    "• Try again soon<br><br>"+
-    "Let’s get those systems online.";
-
-  } else {
-
-    let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
-                 : avg<3.5 ? "✅ OPERATIONAL READY"
-                 : avg<4.5 ? "⭐ ELITE OPERATOR"
-                 : "🔥 SPECIAL FORCES TARGET";
-
-    document.getElementById("resultText").innerHTML =
-    "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br>"+
-    "Push-Ups: "+push+" → "+label(ps)+"<br>"+
-    "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
-    "Squats: "+squat+" → "+label(qs)+"<br>"+
-    "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
-    "Plank: "+plank+" sec → "+label(pls);
-  }
-}
-
-</script>
-
-</body>
-</html>
+/* TIMER */
