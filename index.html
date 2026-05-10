@@ -17,9 +17,11 @@ h1 {
   color: #FFD200;
   font-size: 100px;
 }
+
 h2 {
   font-size: 70px;
 }
+
 h3 {
   font-size: 50px;
 }
@@ -30,7 +32,16 @@ p {
   line-height: 1.6;
 }
 
-/* BUTTON (YELLOW) */
+/* INTRO BOX */
+.introBox {
+  border: 3px solid #FFD200;
+  padding: 30px;
+  margin: 30px auto;
+  width: 85%;
+  border-radius: 15px;
+}
+
+/* BUTTON */
 button {
   font-size: 45px;
   padding: 20px 40px;
@@ -66,6 +77,8 @@ input {
 <!-- INTRO -->
 <div id="intro">
 
+<div class="introBox">
+
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -74,13 +87,15 @@ This fitness assessment is based on real military standards:<br><br>
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Physical Screening Test<br><br>
 
-Complete all exercises in any order.<br>
-Record your results after each station.<br><br>
+You will complete a series of challenges measuring:<br>
+Strength • Endurance • Conditioning<br><br>
 
-Submit when all are complete.<br><br>
+Submit your results when completed.<br><br>
 
 A final phase will be revealed.
 </p>
+
+</div>
 
 <button id="beginBtn">BEGIN ASSESSMENT</button>
 
@@ -103,6 +118,8 @@ A final phase will be revealed.
 <p>Shuttle Runs</p>
 <input id="run">
 
+<br><br><br>  <!-- pushes button lower -->
+
 <button onclick="goFinal()">SUBMIT RESULTS</button>
 
 </div>
@@ -114,8 +131,7 @@ A final phase will be revealed.
 
 <p>
 CORE STABILITY TEST<br><br>
-Hold position.<br>
-Await instruction.
+Hold position.
 </p>
 
 <h1 id="timer" style="font-size:150px; color:#FFD200;">00:00</h1>
@@ -136,7 +152,7 @@ Await instruction.
 
 <script>
 
-/* IMPORTANT: BUTTON FIX */
+/* SAFE BUTTON HANDLING */
 document.getElementById("beginBtn").addEventListener("click", function() {
   document.getElementById("intro").style.display = "none";
   document.getElementById("inputScreen").style.display = "block";
@@ -145,7 +161,7 @@ document.getElementById("beginBtn").addEventListener("click", function() {
 let plank = 0;
 let timer = null;
 
-/* GO TO FINAL */
+/* GO FINAL */
 function goFinal() {
   document.getElementById("inputScreen").style.display = "none";
   document.getElementById("finalScreen").style.display = "block";
@@ -165,7 +181,7 @@ function startTimer() {
   }, 1000);
 }
 
-/* STOP */
+/* STOP + RESULT */
 function stopTimer() {
 
   clearInterval(timer);
