@@ -36,14 +36,6 @@ button {
   border-radius:10px;
 }
 
-input, select {
-  font-size:48px;
-  padding:12px;
-  width:220px;
-  margin:15px;
-  text-align:center;
-}
-
 .hidden { display:none; }
 </style>
 </head>
@@ -54,6 +46,7 @@ input, select {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
+<!-- INTRO -->
 <div id="intro">
 <div class="introBox">
 
@@ -70,100 +63,26 @@ Strength • Endurance • Conditioning
 
 </div>
 
-<button id="beginBtn">BEGIN ASSESSMENT</button>
+<!-- ✅ SUPER SIMPLE WORKING BUTTON -->
+<button onclick="start()">BEGIN ASSESSMENT</button>
 
 </div>
 
+<!-- NEXT SCREEN -->
 <div id="inputScreen" class="hidden">
-
-<h2>ENTER DETAILS</h2>
-
-<p>Age</p>
-<input id="age">
-
-<p>Sex</p>
-<select id="sex">
-  <option value="male">Male</option>
-  <option value="female">Female</option>
-</select>
-
-<h2>RESULTS</h2>
-
-<p>Push-Ups</p><input id="push">
-<p>Sit-Ups</p><input id="sit">
-<p>Squats</p><input id="squat">
-<p>Shuttle Run</p><input id="run">
-
-<br><br><br><br>
-
-<button id="submitBtn">SUBMIT</button>
-
-</div>
-
-<div id="finalScreen" class="hidden">
-<h2>FINAL PHASE</h2>
-<p>CORE STABILITY TEST<br>Hold position.</p>
-
-<h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
-
-<button id="startTimerBtn">START</button>
-<button id="stopTimerBtn">STOP</button>
-
-</div>
-
-<div id="resultScreen" class="hidden">
-<h2>RESULT</h2>
-<p id="resultText"></p>
+<h2>TEST SCREEN</h2>
+<p>If you see this, the button works ✅</p>
 </div>
 
 <script>
 
-let plank=0;
-let timer=null;
-
-/* ✅ GUARANTEED BUTTON WORKING */
-window.onload = function(){
-
-  document.getElementById("beginBtn").onclick = function(){
-    document.getElementById("intro").style.display="none";
-    document.getElementById("inputScreen").style.display="block";
-  };
-
-  document.getElementById("submitBtn").onclick = function(){
-    document.getElementById("inputScreen").style.display="none";
-    document.getElementById("finalScreen").style.display="block";
-  };
-
-  document.getElementById("startTimerBtn").onclick = startTimer;
-  document.getElementById("stopTimerBtn").onclick = stopTimer;
-
-};
-
-function startTimer(){
-  if(timer) return;
-
-  plank=0;
-
-  timer=setInterval(()=>{
-    plank++;
-
-    let m=String(Math.floor(plank/60)).padStart(2,'0');
-    let s=String(plank%60).padStart(2,'0');
-
-    document.getElementById("timer").innerHTML=m+":"+s;
-
-  },1000);
+/* ✅ SIMPLE — GUARANTEED */
+function start() {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("inputScreen").style.display = "block";
 }
 
-/* SCORING */
-function getScore(val, base){
-  if(val < base*0.5) return 0;
-  if(val < base*0.7) return 1;
-  if(val < base) return 2;
-  if(val < base*1.2) return 3;
-  if(val < base*1.4) return 4;
-  return 5;
-}
+</script>
 
-/* LABEL */
-function label(score){
+</body>
+</html>
