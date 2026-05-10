@@ -12,14 +12,15 @@ body {
   padding:40px;
 }
 
-/* REDUCED SIZE (~25%) */
+/* TEXT SIZE */
 h1 { color:#FFD200; font-size:90px; }
 h2 { font-size:65px; }
 h3 { font-size:50px; }
 
 p { font-size:42px; line-height:1.5; }
 
-.introBox {
+/* BOX STYLE (USED FOR BOTH INTRO + RESULT) */
+.introBox, .resultBox {
   border:3px solid #FFD200;
   padding:28px;
   margin:25px auto;
@@ -55,8 +56,10 @@ input, select {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
+<!-- INTRO -->
 <div id="intro">
 <div class="introBox">
+
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -65,11 +68,13 @@ PST – Special Forces Screening Test<br><br>
 
 Strength • Endurance • Conditioning
 </p>
+
 </div>
 
 <button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
+<!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
 <h2>ENTER DETAILS</h2>
@@ -96,6 +101,7 @@ Strength • Endurance • Conditioning
 
 </div>
 
+<!-- FINAL -->
 <div id="finalScreen" class="hidden">
 
 <h2>FINAL PHASE</h2>
@@ -108,11 +114,15 @@ Strength • Endurance • Conditioning
 
 </div>
 
+<!-- RESULT -->
 <div id="resultScreen" class="hidden">
 
 <h2>RESULT</h2>
 
+<!-- ✅ NEW RESULT BOX -->
+<div class="resultBox">
 <p id="resultText"></p>
+</div>
 
 </div>
 
@@ -121,7 +131,6 @@ Strength • Endurance • Conditioning
 let plank=0;
 let timer=null;
 
-/* NAVIGATION */
 function start(){
   document.getElementById("intro").style.display="none";
   document.getElementById("inputScreen").style.display="block";
@@ -132,7 +141,6 @@ function goFinal(){
   document.getElementById("finalScreen").style.display="block";
 }
 
-/* TIMER */
 function startTimer(){
   if(timer) return;
 
@@ -150,7 +158,6 @@ function startTimer(){
   },1000);
 }
 
-/* STOP + SCORING */
 function stopTimer(){
 
   clearInterval(timer);
@@ -184,48 +191,3 @@ function stopTimer(){
   let rs=score(run,12);
   let pls=score(plank,150);
 
-  let avg=(ps+ss+qs+rs+pls)/5;
-
-  document.getElementById("finalScreen").style.display="none";
-  document.getElementById("resultScreen").style.display="block";
-
-/* REBOOT */
-if(avg<1.5){
-  document.getElementById("resultText").innerHTML =
-
-  "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>" +
-
-  "Minimal movement detected<br>" +
-  "Physical systems appear to be in sleep mode.<br><br>" +
-
-  "<b>Recommendation:</b><br>" +
-  "• Move more<br>" +
-  "• Start small<br>" +
-  "• Try again soon<br><br>" +
-
-  "Let’s get those systems online.";
-}
-else{
-
-  let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
-               : avg<3.5 ? "✅ OPERATIONAL READY"
-               : avg<4.5 ? "⭐ ELITE OPERATOR"
-               : "🔥 SPECIAL FORCES TARGET";
-
-  document.getElementById("resultText").innerHTML =
-
-  "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br>" +
-
-  "Push-Ups: "+push+" → "+label(ps)+"<br>"+
-  "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
-  "Squats: "+squat+" → "+label(qs)+"<br>"+
-  "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
-  "Plank: "+plank+" sec → "+label(pls);
-}
-
-}
-
-</script>
-
-</body>
-</html>
