@@ -8,7 +8,7 @@ body { background:#0b0b0b; color:white; font-family:Arial; text-align:center; pa
 h1 {color:#FFD200; font-size:100px;}
 h2 {font-size:70px;}
 h3 {font-size:50px;}
-p {font-size:40px; line-height:1.5;}
+p {font-size:40px; line-height:1.6;}
 
 .introBox {
   border:3px solid #FFD200;
@@ -109,51 +109,60 @@ Strength • Endurance • Conditioning
 
 <script>
 
-let plank=0, timer=null;
+let plank=0;
+let timer=null;
 
 /* START */
 function start(){
-  intro.style.display="none";
-  inputScreen.style.display="block";
+  document.getElementById("intro").style.display="none";
+  document.getElementById("inputScreen").style.display="block";
 }
 
 /* FINAL */
 function goFinal(){
-  inputScreen.style.display="none";
-  finalScreen.style.display="block";
+  document.getElementById("inputScreen").style.display="none";
+  document.getElementById("finalScreen").style.display="block";
 }
 
 /* TIMER */
 function startTimer(){
   if(timer) return;
+
+  plank = 0;
+
   timer=setInterval(()=>{
     plank++;
+
     let m=String(Math.floor(plank/60)).padStart(2,'0');
     let s=String(plank%60).padStart(2,'0');
+
     document.getElementById("timer").innerHTML=m+":"+s;
+
   },1000);
 }
 
 /* SCORING */
 function level(val, base){
-  if(val<base*0.7) return "Emerging Athlete";
-  if(val<base) return "Performance Athlete";
-  if(val<base*1.2) return "Operational Ready ✅";
-  if(val<base*1.4) return "Elite Operator";
+  if(val < base*0.7) return "Emerging Athlete";
+  if(val < base) return "Performance Athlete";
+  if(val < base*1.2) return "Operational Ready ✅";
+  if(val < base*1.4) return "Elite Operator";
   return "Special Forces Target";
 }
 
+/* STOP + RESULT */
 function stopTimer(){
 
  clearInterval(timer);
+ timer=null;
 
- let age=parseInt(ageInput.value)||30;
- let sex=sexInput.value;
+ let age = parseInt(document.getElementById("age").value) || 30;
+ let sex = document.getElementById("sex").value;
 
- let push=parseInt(pushInput.value)||0;
- let sit=parseInt(sitInput.value)||0;
- let squat=parseInt(squatInput.value)||0;
- let run=parseInt(runInput.value)||0;
+ let push = parseInt(document.getElementById("push").value) || 0;
+ let sit = parseInt(document.getElementById("sit").value) || 0;
+ let squat = parseInt(document.getElementById("squat").value) || 0;
+ let run = parseInt(document.getElementById("run").value) || 0;
 
  /* BASELINES */
  let basePush=35, baseSit=45, baseSquat=45, baseRun=12, basePlank=150;
@@ -178,20 +187,20 @@ function stopTimer(){
  let r=level(run,baseRun);
  let pl=level(plank,basePlank);
 
- let overall=[p,sq,s,r,pl].filter(x=>x.includes("Operational")).length>=3
- ? "OPERATIONAL READY ✅"
- : "IN DEVELOPMENT";
+ let overall=[p,s,sq,r,pl].filter(x=>x.includes("Operational")).length>=3
+  ? "OPERATIONAL READY ✅"
+  : "IN DEVELOPMENT";
 
- finalScreen.style.display="none";
- resultScreen.style.display="block";
+ document.getElementById("finalScreen").style.display="none";
+ document.getElementById("resultScreen").style.display="block";
 
- resultText.innerHTML=
- "<b>STATUS: "+overall+"</b><br><br>"+
+ document.getElementById("resultText").innerHTML =
+ "<b>STATUS: "+overall+"</b><br><br>" +
 
- "Push-Ups: "+push+" → "+p+"<br>"+
- "Sit-Ups: "+sit+" → "+s+"<br>"+
- "Squats: "+squat+" → "+sq+"<br>"+
- "Shuttle Run: "+run+" → "+r+"<br>"+
+ "Push-Ups: "+push+" → "+p+"<br>" +
+ "Sit-Ups: "+sit+" → "+s+"<br>" +
+ "Squats: "+squat+" → "+sq+"<br>" +
+ "Shuttle Run: "+run+" → "+r+"<br>" +
  "Plank: "+plank+" sec → "+pl;
 
 }
