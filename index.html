@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>FitFam Selection Protocol</title>
+
+<style>
+body {
+  background: #0b0b0b;
+  color: #ffffff;
+  font-family: Arial;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 { color:#FFD200; }
+h2 { color:#FFD200; }
+
+button {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+input {
+  font-size: 18px;
+  padding: 10px;
+  width: 120px;
+  text-align: center;
+}
+
+.hidden { display:none; }
+
+/* Corner logo */
+.cornerLogo {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CORNER LOGO -->
+<img src="IMG_1495.jpg" class="cornerLogo">
+
+<h1>FITFAM</h1>
+<h2>SELECTION PROTOCOL</h2>
+<h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
+
+<!-- INTRO -->
+<div id="intro">
+<img src="IMG_1495.jpg" width="150"><br><br>
+
+<p>
+Welcome to the Selection Protocol.<br><br>
+
+This assessment is based on real military fitness standards, including:<br><br>
+
+ACFT – U.S. Army fitness test<br>
+PST – Special forces screening test<br><br>
+
+Complete each station and record your results.<br><br>
+
+A final phase will be revealed upon completion.
+</p>
+
+<button onclick="start()">BEGIN ASSESSMENT</button>
+</div>
+
+<!-- PUSHUPS -->
+<div id="push" class="hidden">
+<h2>PUSH-UPS (60s)</h2>
+<input id="pushInput">
+<br>
+<button onclick="next('sit')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SITUPS -->
+<div id="sit" class="hidden">
+<h2>SIT-UPS (60s)</h2>
+<input id="sitInput">
+<br>
+<button onclick="next('squat')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SQUATS -->
+<div id="squat" class="hidden">
+<h2>SQUATS (60s)</h2>
+<input id="squatInput">
+<br>
+<button onclick="next('run')">SAVE & CONTINUE</button>
+</div>
+
+<!-- SHUTTLE -->
+<div id="run" class="hidden">
+<h2>SHUTTLE RUN</h2>
+<input id="runInput">
+<br>
+<button onclick="finalPhase()">SAVE & CONTINUE</button>
+</div>
+
+<!-- FINAL PHASE -->
+<div id="final" class="hidden">
+
+<img src="IMG_1495.jpg" width="120"><br><br>
+
+<h2>FINAL PHASE INITIATED</h2>
+
+<p>
+CORE STABILITY TEST<br><br>
+Hold position.<br>
+Await instruction.
+</p>
+
+<h1 id="timer">00:00</h1>
+
+<p>Start timer, then begin. Stop immediately when you drop.</p>
+
+<button onclick="startTimer()">START TIMER</button>
+<button onclick="stopTimer()">STOP & RECORD</button>
+
+</div>
+
+<!-- RESULT -->
+<div id="result" class="hidden">
+
+<img src="IMG_1495.jpg" width="120"><br><br>
+
+<h2>RESULT</h2>
+
+<p id="output"></p>
+
+</div>
+
+<script>
+
+let plank = 0;
+let interval;
+
+function start() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("push").classList.remove("hidden");
+}
+
+function next(stage) {
+  event.target.parentElement.classList.add("hidden");
+  document.getElementById(stage).classList.remove("hidden");
+}
+
+function finalPhase() {
+  document.getElementById("run").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+}
+
+function startTimer() {
+  if (interval) return;
+
+  interval = setInterval(() => {
+    plank++;
+
+    let mins = String(Math.floor(plank / 60)).padStart(2, '0');
+    let secs = String(plank % 60).padStart(2, '0');
+
+    document.getElementById("timer").innerText = mins + ":" + secs;
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(interval);
+
+  let push = document.getElementById("pushInput").value;
+  let sit = document.getElementById("sitInput").value;
+  let squat = document.getElementById("squatInput").value;
+  let run = document.getElementById("runInput").value;
+
+  let operatorID = Math.floor(1000 + Math.random() * 9000);
+
+  document.getElementById("final").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+
+  document.getElementById("output").innerHTML =
+  "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
+  "You are designated <b>OPERATOR-" + operatorID + "</b><br><br>" +
+  "Push-ups: " + push + "<br>" +
+  "Sit-ups: " + sit + "<br>" +
+  "Squats: " + squat + "<br>" +
+  "Shuttle: " + run + "<br>" +
+  "Plank: " + plank + " sec";
+}
+
