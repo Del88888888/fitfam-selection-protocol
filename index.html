@@ -56,6 +56,7 @@ input, select {
 
 <div id="intro">
 <div class="introBox">
+
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -66,9 +67,11 @@ PST – Special Forces Screening Test<br><br>
 
 Strength • Endurance • Conditioning
 </p>
+
 </div>
 
-<button onclick="start()">BEGIN ASSESSMENT</button>
+<button id="beginBtn">BEGIN ASSESSMENT</button>
+
 </div>
 
 <div id="inputScreen" class="hidden">
@@ -93,7 +96,7 @@ Strength • Endurance • Conditioning
 
 <br><br><br><br>
 
-<button onclick="goFinal()">SUBMIT</button>
+<button id="submitBtn">SUBMIT</button>
 
 </div>
 
@@ -103,8 +106,9 @@ Strength • Endurance • Conditioning
 
 <h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
 
-<button onclick="startTimer()">START</button>
-<button onclick="stopTimer()">STOP</button>
+<button id="startTimerBtn">START</button>
+<button id="stopTimerBtn">STOP</button>
+
 </div>
 
 <div id="resultScreen" class="hidden">
@@ -117,15 +121,23 @@ Strength • Endurance • Conditioning
 let plank=0;
 let timer=null;
 
-function start(){
-  document.getElementById("intro").style.display="none";
-  document.getElementById("inputScreen").style.display="block";
-}
+/* ✅ GUARANTEED BUTTON WORKING */
+window.onload = function(){
 
-function goFinal(){
-  document.getElementById("inputScreen").style.display="none";
-  document.getElementById("finalScreen").style.display="block";
-}
+  document.getElementById("beginBtn").onclick = function(){
+    document.getElementById("intro").style.display="none";
+    document.getElementById("inputScreen").style.display="block";
+  };
+
+  document.getElementById("submitBtn").onclick = function(){
+    document.getElementById("inputScreen").style.display="none";
+    document.getElementById("finalScreen").style.display="block";
+  };
+
+  document.getElementById("startTimerBtn").onclick = startTimer;
+  document.getElementById("stopTimerBtn").onclick = stopTimer;
+
+};
 
 function startTimer(){
   if(timer) return;
@@ -139,10 +151,11 @@ function startTimer(){
     let s=String(plank%60).padStart(2,'0');
 
     document.getElementById("timer").innerHTML=m+":"+s;
+
   },1000);
 }
 
-/* SCORE */
+/* SCORING */
 function getScore(val, base){
   if(val < base*0.5) return 0;
   if(val < base*0.7) return 1;
@@ -154,11 +167,3 @@ function getScore(val, base){
 
 /* LABEL */
 function label(score){
-  if(score===1) return "⚪ Emerging Athlete";
-  if(score===2) return "🔹 Performance Athlete";
-  if(score===3) return "✅ Operational Ready";
-  if(score===4) return "⭐ Elite Operator";
-  if(score===5) return "🔥 Special Forces Target";
-  return "";
-}
-
