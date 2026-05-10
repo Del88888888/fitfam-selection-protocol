@@ -4,30 +4,22 @@
 <title>FitFam Selection Protocol</title>
 
 <style>
-body {
-  background: #0b0b0b;
-  color: white;
-  font-family: Arial;
-  text-align: center;
-  padding: 40px;
-}
-
-h1 { color:#FFD200; font-size:100px; }
-h2 { font-size:70px; }
-h3 { font-size:50px; }
-
-p { font-size:45px; line-height:1.6; }
+body { background:#0b0b0b; color:white; font-family:Arial; text-align:center; padding:40px; }
+h1 {color:#FFD200; font-size:100px;}
+h2 {font-size:70px;}
+h3 {font-size:50px;}
+p {font-size:40px; line-height:1.5;}
 
 .introBox {
-  border: 3px solid #FFD200;
-  padding: 30px;
-  margin: 30px auto;
-  width: 85%;
-  border-radius: 15px;
+  border:3px solid #FFD200;
+  padding:30px;
+  margin:30px auto;
+  width:85%;
+  border-radius:15px;
 }
 
 button {
-  font-size:45px;
+  font-size:40px;
   padding:20px 40px;
   margin-top:30px;
   background:#FFD200;
@@ -36,15 +28,15 @@ button {
   border-radius:10px;
 }
 
-input {
-  font-size:45px;
+input, select {
+  font-size:40px;
   padding:15px;
-  width:200px;
+  width:220px;
   margin:15px;
   text-align:center;
 }
 
-.hidden { display:none; }
+.hidden {display:none;}
 </style>
 </head>
 
@@ -56,7 +48,6 @@ input {
 
 <!-- INTRO -->
 <div id="intro">
-
 <div class="introBox">
 <p>
 Welcome to the Selection Protocol.<br><br>
@@ -66,114 +57,142 @@ This fitness assessment is based on real military standards:<br><br>
 ACFT – U.S. Army Combat Fitness Test<br>
 PST – Special Forces Screening Test<br><br>
 
-You will complete a series of challenges measuring:<br>
 Strength • Endurance • Conditioning
 </p>
 </div>
 
-<button id="beginBtn">BEGIN ASSESSMENT</button>
-
+<button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
 <!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
-<h2>ENTER RESULTS</h2>
+<h2>ENTER DETAILS</h2>
+
+<p>Age</p>
+<input id="age">
+
+<p>Sex</p>
+<select id="sex">
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+</select>
+
+<h2>RESULTS</h2>
 
 <p>Push-Ups</p><input id="push">
 <p>Sit-Ups</p><input id="sit">
 <p>Squats</p><input id="squat">
 <p>Shuttle Run</p><input id="run">
 
-<br><br><br>
+<br><br>
 <button onclick="goFinal()">SUBMIT</button>
 
 </div>
 
 <!-- FINAL -->
 <div id="finalScreen" class="hidden">
+<h2>FINAL PHASE</h2>
+<p>CORE STABILITY TEST<br>Hold position.</p>
 
-<h2>FINAL PHASE INITIATED</h2>
-
-<p>
-CORE STABILITY TEST<br><br>
-Hold position.
-</p>
-
-<h1 id="timer" style="font-size:150px; color:#FFD200;">00:00</h1>
+<h1 id="timer" style="font-size:150px;color:#FFD200;">00:00</h1>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
-
 </div>
 
 <!-- RESULT -->
 <div id="resultScreen" class="hidden">
-
 <h2>RESULT</h2>
-
 <p id="resultText"></p>
-
 </div>
 
 <script>
 
-/* ✅ FIX: WAIT UNTIL PAGE FULLY LOADS */
-window.onload = function() {
+let plank=0, timer=null;
 
-  document.getElementById("beginBtn").addEventListener("click", function() {
-    document.getElementById("intro").style.display = "none";
-    document.getElementById("inputScreen").style.display = "block";
-  });
-
-};
-
-let plank = 0;
-let timer = null;
-
-function goFinal() {
-  document.getElementById("inputScreen").style.display = "none";
-  document.getElementById("finalScreen").style.display = "block";
+/* START */
+function start(){
+  intro.style.display="none";
+  inputScreen.style.display="block";
 }
 
-function startTimer() {
+/* FINAL */
+function goFinal(){
+  inputScreen.style.display="none";
+  finalScreen.style.display="block";
+}
 
-  if (timer) return;
-
-  timer = setInterval(function() {
+/* TIMER */
+function startTimer(){
+  if(timer) return;
+  timer=setInterval(()=>{
     plank++;
-
-    let m = String(Math.floor(plank / 60)).padStart(2,'0');
-    let s = String(plank % 60).padStart(2,'0');
-
-    document.getElementById("timer").innerHTML = m + ":" + s;
-
-  }, 1000);
+    let m=String(Math.floor(plank/60)).padStart(2,'0');
+    let s=String(plank%60).padStart(2,'0');
+    document.getElementById("timer").innerHTML=m+":"+s;
+  },1000);
 }
 
-function stopTimer() {
+/* SCORING */
+function level(val, base){
+  if(val<base*0.7) return "Emerging Athlete";
+  if(val<base) return "Performance Athlete";
+  if(val<base*1.2) return "Operational Ready ✅";
+  if(val<base*1.4) return "Elite Operator";
+  return "Special Forces Target";
+}
 
-  clearInterval(timer);
-  timer = null;
+function stopTimer(){
 
-  let push = document.getElementById("push").value;
-  let sit = document.getElementById("sit").value;
-  let squat = document.getElementById("squat").value;
-  let run = document.getElementById("run").value;
+ clearInterval(timer);
 
-  let id = Math.floor(1000 + Math.random() * 9000);
+ let age=parseInt(ageInput.value)||30;
+ let sex=sexInput.value;
 
-  document.getElementById("finalScreen").style.display = "none";
-  document.getElementById("resultScreen").style.display = "block";
+ let push=parseInt(pushInput.value)||0;
+ let sit=parseInt(sitInput.value)||0;
+ let squat=parseInt(squatInput.value)||0;
+ let run=parseInt(runInput.value)||0;
 
-  document.getElementById("resultText").innerHTML =
-  "<b>STATUS: ASSESSMENT COMPLETE</b><br><br>" +
-  "OPERATOR-" + id + "<br><br>" +
-  "Push-Ups: " + push + "<br>" +
-  "Sit-Ups: " + sit + "<br>" +
-  "Squats: " + squat + "<br>" +
-  "Shuttle Run: " + run + "<br>" +
-  "Plank: " + plank + " sec";
+ /* BASELINES */
+ let basePush=35, baseSit=45, baseSquat=45, baseRun=12, basePlank=150;
+
+ /* ADJUSTMENT */
+ let factor=1;
+
+ if(sex==="female") factor*=0.85;
+ if(age>=40 && age<50) factor*=0.9;
+ if(age>=50) factor*=0.8;
+
+ basePush*=factor;
+ baseSit*=factor;
+ baseSquat*=factor;
+ baseRun*=factor;
+ basePlank*=factor;
+
+ /* RESULTS */
+ let p=level(push,basePush);
+ let s=level(sit,baseSit);
+ let sq=level(squat,baseSquat);
+ let r=level(run,baseRun);
+ let pl=level(plank,basePlank);
+
+ let overall=[p,sq,s,r,pl].filter(x=>x.includes("Operational")).length>=3
+ ? "OPERATIONAL READY ✅"
+ : "IN DEVELOPMENT";
+
+ finalScreen.style.display="none";
+ resultScreen.style.display="block";
+
+ resultText.innerHTML=
+ "<b>STATUS: "+overall+"</b><br><br>"+
+
+ "Push-Ups: "+push+" → "+p+"<br>"+
+ "Sit-Ups: "+sit+" → "+s+"<br>"+
+ "Squats: "+squat+" → "+sq+"<br>"+
+ "Shuttle Run: "+run+" → "+r+"<br>"+
+ "Plank: "+plank+" sec → "+pl;
 
 }
 
