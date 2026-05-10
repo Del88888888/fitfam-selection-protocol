@@ -9,49 +9,43 @@ body {
   color:white;
   font-family:Arial;
   text-align:center;
-  padding:50px;
-}
-
-/* SUPER LARGE HEADINGS */
-h1 { color:#FFD200; font-size:130px; }
-h2 { font-size:95px; }
-h3 { font-size:70px; }
-
-/* LARGE TEXT */
-p { font-size:65px; line-height:1.5; }
-
-/* INTRO BOX */
-.introBox {
-  border:4px solid #FFD200;
   padding:40px;
-  margin:40px auto;
-  width:85%;
-  border-radius:20px;
 }
 
-/* BUTTON */
-button {
-  font-size:65px;
-  padding:30px 60px;
-  margin-top:40px;
-  background:#FFD200;
-  color:black;
-  border:none;
+/* slightly reduced */
+h1 { color:#FFD200; font-size:95px; }
+h2 { font-size:72px; }
+h3 { font-size:52px; }
+
+p { font-size:48px; line-height:1.5; }
+
+.introBox {
+  border:3px solid #FFD200;
+  padding:30px;
+  margin:30px auto;
+  width:85%;
   border-radius:15px;
 }
 
-/* INPUT */
-input, select {
-  font-size:65px;
-  padding:20px;
-  width:280px;
-  margin:20px;
-  text-align:center;
+button {
+  font-size:48px;
+  padding:20px 40px;
+  margin-top:30px;
+  background:#FFD200;
+  color:black;
+  border:none;
   border-radius:10px;
 }
 
-/* HIDE */
-.hidden { display:none; }
+input, select {
+  font-size:48px;
+  padding:12px;
+  width:220px;
+  margin:15px;
+  text-align:center;
+}
+
+.hidden {display:none;}
 </style>
 </head>
 
@@ -61,10 +55,8 @@ input, select {
 <h2>SELECTION PROTOCOL</h2>
 <h3>CODENAME: ZERO HOUR // 12 MINS+</h3>
 
-<!-- INTRO -->
 <div id="intro">
 <div class="introBox">
-
 <p>
 Welcome to the Selection Protocol.<br><br>
 
@@ -75,13 +67,11 @@ PST – Special Forces Screening Test<br><br>
 
 Strength • Endurance • Conditioning
 </p>
-
 </div>
 
 <button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
-<!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
 <h2>ENTER DETAILS</h2>
@@ -102,32 +92,23 @@ Strength • Endurance • Conditioning
 <p>Squats</p><input id="squat">
 <p>Shuttle Run</p><input id="run">
 
-<br><br>
 <button onclick="goFinal()">SUBMIT</button>
 
 </div>
 
-<!-- FINAL -->
 <div id="finalScreen" class="hidden">
-
 <h2>FINAL PHASE</h2>
-
 <p>CORE STABILITY TEST<br>Hold position.</p>
 
-<h1 id="timer" style="font-size:220px;color:#FFD200;">00:00</h1>
+<h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
 
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
-
 </div>
 
-<!-- RESULT -->
 <div id="resultScreen" class="hidden">
-
 <h2>RESULT</h2>
-
 <p id="resultText"></p>
-
 </div>
 
 <script>
@@ -136,37 +117,54 @@ let plank=0;
 let timer=null;
 
 function start(){
-  document.getElementById("intro").style.display="none";
-  document.getElementById("inputScreen").style.display="block";
+  intro.style.display="none";
+  inputScreen.style.display="block";
 }
 
 function goFinal(){
-  document.getElementById("inputScreen").style.display="none";
-  document.getElementById("finalScreen").style.display="block";
+  inputScreen.style.display="none";
+  finalScreen.style.display="block";
 }
 
 function startTimer(){
   if(timer) return;
-
   plank=0;
 
   timer=setInterval(()=>{
     plank++;
-
     let m=String(Math.floor(plank/60)).padStart(2,'0');
     let s=String(plank%60).padStart(2,'0');
-
-    document.getElementById("timer").innerHTML=m+":"+s;
+    timerDisplay.innerHTML=m+":"+s;
   },1000);
 }
 
-/* ICON LEVEL */
-function level(val, base){
-  if(val < base*0.7) return "⚪ Emerging Athlete";
-  if(val < base) return "🔹 Performance Athlete";
-  if(val < base*1.2) return "✅ Operational Ready";
-  if(val < base*1.4) return "⭐ Elite Operator";
+/* FIX TIMER DISPLAY */
+let timerDisplay = document.getElementById("timer");
+
+/* LEVEL SYSTEM */
+function getLevelScore(val, base){
+  if(val < base*0.7) return 1;
+  if(val < base) return 2;
+  if(val < base*1.2) return 3;
+  if(val < base*1.4) return 4;
+  return 5;
+}
+
+/* LEVEL LABEL */
+function label(score){
+  if(score===1) return "⚪ Emerging Athlete";
+  if(score===2) return "🔹 Performance Athlete";
+  if(score===3) return "✅ Operational Ready";
+  if(score===4) return "⭐ Elite Operator";
   return "🔥 Special Forces Target";
+}
+
+/* OVERALL LABEL */
+function overallLabel(avg){
+  if(avg<2.5) return "🔹 PERFORMANCE ATHLETE";
+  if(avg<3.5) return "✅ OPERATIONAL READY";
+  if(avg<4.5) return "⭐ ELITE OPERATOR";
+  return "🔥 SPECIAL FORCES TARGET";
 }
 
 function stopTimer(){
@@ -174,18 +172,17 @@ function stopTimer(){
  clearInterval(timer);
  timer=null;
 
- let age = parseInt(document.getElementById("age").value) || 30;
- let sex = document.getElementById("sex").value;
+ let age=parseInt(age.value)||30;
+ let sex=sex.value;
 
- let push = parseInt(document.getElementById("push").value) || 0;
- let sit = parseInt(document.getElementById("sit").value) || 0;
- let squat = parseInt(document.getElementById("squat").value) || 0;
- let run = parseInt(document.getElementById("run").value) || 0;
+ let push=parseInt(pushInput.value)||0;
+ let sit=parseInt(sitInput.value)||0;
+ let squat=parseInt(squatInput.value)||0;
+ let run=parseInt(runInput.value)||0;
 
  let basePush=35, baseSit=45, baseSquat=45, baseRun=12, basePlank=150;
 
  let factor=1;
-
  if(sex==="female") factor*=0.85;
  if(age>=40 && age<50) factor*=0.9;
  if(age>=50) factor*=0.8;
@@ -196,28 +193,53 @@ function stopTimer(){
  baseRun*=factor;
  basePlank*=factor;
 
- let p=level(push,basePush);
- let s=level(sit,baseSit);
- let sq=level(squat,baseSquat);
- let r=level(run,baseRun);
- let pl=level(plank,basePlank);
+ let ps=getLevelScore(push,basePush);
+ let ss=getLevelScore(sit,baseSit);
+ let qs=getLevelScore(squat,baseSquat);
+ let rs=getLevelScore(run,baseRun);
+ let pls=getLevelScore(plank,basePlank);
 
- let overall = [p,s,sq,r,pl].filter(x=>x.includes("Operational")).length>=3
-  ? "✅ OPERATIONAL READY"
-  : "🔹 IN DEVELOPMENT";
+ let avg=(ps+ss+qs+rs+pls)/5;
 
- document.getElementById("finalScreen").style.display="none";
- document.getElementById("resultScreen").style.display="block";
+ let overall=overallLabel(avg);
 
- document.getElementById("resultText").innerHTML=
+ /* NEXT TARGET */
+ let nextLevel = avg<3 ? "✅ OPERATIONAL READY"
+                : avg<4 ? "⭐ ELITE OPERATOR"
+                : "🔥 SPECIAL FORCES TARGET";
 
- "<b>STATUS: "+overall+"</b><br><br>" +
+ function improve(val, base){
+   return Math.max(0, Math.ceil(base*1.2 - val));
+ }
 
- "Push-Ups: "+push+" → "+p+"<br>" +
- "Sit-Ups: "+sit+" → "+s+"<br>" +
- "Squats: "+squat+" → "+sq+"<br>" +
- "Shuttle Run: "+run+" → "+r+"<br>" +
- "Plank: "+plank+" sec → "+pl;
+ let impPush = improve(push,basePush);
+ let impSit = improve(sit,baseSit);
+ let impPlank = improve(plank,basePlank);
+
+ let operatorID = Math.floor(1000 + Math.random()*9000);
+
+ finalScreen.style.display="none";
+ resultScreen.style.display="block";
+
+ resultText.innerHTML=
+
+ "<b>FITFAM SELECTION PROTOCOL</b><br><br>"+
+
+ "<b>STATUS: "+overall+"</b><br><br>"+
+
+ "OPERATOR-"+operatorID+"<br><br>"+
+
+ "Push-Ups: "+push+" → "+label(ps)+"<br>"+
+ "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
+ "Squats: "+squat+" → "+label(qs)+"<br>"+
+ "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
+ "Plank: "+plank+" sec → "+label(pls)+"<br><br>"+
+
+ "<b>Next Target: "+nextLevel+"</b><br>"+
+
+ "+ "+impPush+" Push-ups<br>"+
+ "+ "+impSit+" Sit-ups<br>"+
+ "+ "+impPlank+" sec Plank";
 
 }
 
