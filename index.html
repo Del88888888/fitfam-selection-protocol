@@ -36,6 +36,14 @@ button {
   border-radius:10px;
 }
 
+input, select {
+  font-size:48px;
+  padding:12px;
+  width:220px;
+  margin:15px;
+  text-align:center;
+}
+
 .hidden { display:none; }
 </style>
 </head>
@@ -48,41 +56,124 @@ button {
 
 <!-- INTRO -->
 <div id="intro">
-<div class="introBox">
+  <div class="introBox">
+    <p>
+    Welcome to the Selection Protocol.<br><br>
 
-<p>
-Welcome to the Selection Protocol.<br><br>
+    This fitness assessment is based on real military standards:<br><br>
 
-This fitness assessment is based on real military standards:<br><br>
+    ACFT – U.S. Army Combat Fitness Test<br>
+    PST – Special Forces Screening Test<br><br>
 
-ACFT – U.S. Army Combat Fitness Test<br>
-PST – Special Forces Screening Test<br><br>
+    Strength • Endurance • Conditioning
+    </p>
+  </div>
 
-Strength • Endurance • Conditioning
-</p>
-
+  <button onclick="start()">BEGIN ASSESSMENT</button>
 </div>
 
-<!-- ✅ SUPER SIMPLE WORKING BUTTON -->
-<button onclick="start()">BEGIN ASSESSMENT</button>
-
-</div>
-
-<!-- NEXT SCREEN -->
+<!-- INPUT -->
 <div id="inputScreen" class="hidden">
-<h2>TEST SCREEN</h2>
-<p>If you see this, the button works ✅</p>
+
+<h2>ENTER DETAILS</h2>
+
+<p>Age</p>
+<input id="age">
+
+<p>Sex</p>
+<select id="sex">
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+</select>
+
+<h2>RESULTS</h2>
+
+<p>Push-Ups</p><input id="push">
+<p>Sit-Ups</p><input id="sit">
+<p>Squats</p><input id="squat">
+<p>Shuttle Run</p><input id="run">
+
+<br><br><br><br>
+
+<button onclick="goFinal()">SUBMIT</button>
+
+</div>
+
+<!-- FINAL -->
+<div id="finalScreen" class="hidden">
+
+<h2>FINAL PHASE</h2>
+
+<p>CORE STABILITY TEST<br>Hold position.</p>
+
+<h1 id="timer" style="font-size:180px;color:#FFD200;">00:00</h1>
+
+<button onclick="startTimer()">START</button>
+<button onclick="stopTimer()">STOP</button>
+
+</div>
+
+<!-- RESULT -->
+<div id="resultScreen" class="hidden">
+
+<h2>RESULT</h2>
+
+<p id="resultText"></p>
+
 </div>
 
 <script>
 
-/* ✅ SIMPLE — GUARANTEED */
-function start() {
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("inputScreen").style.display = "block";
+let plank=0;
+let timer=null;
+
+/* START */
+function start(){
+  document.getElementById("intro").style.display="none";
+  document.getElementById("inputScreen").style.display="block";
 }
 
-</script>
+/* GO FINAL */
+function goFinal(){
+  document.getElementById("inputScreen").style.display="none";
+  document.getElementById("finalScreen").style.display="block";
+}
 
-</body>
-</html>
+/* TIMER */
+function startTimer(){
+  if(timer) return;
+
+  plank=0;
+
+  timer=setInterval(()=>{
+    plank++;
+
+    let m=String(Math.floor(plank/60)).padStart(2,'0');
+    let s=String(plank%60).padStart(2,'0');
+
+    document.getElementById("timer").innerHTML = m+":"+s;
+
+  },1000);
+}
+
+/* SCORING */
+function getScore(val, base){
+  if(val < base*0.5) return 0;
+  if(val < base*0.7) return 1;
+  if(val < base) return 2;
+  if(val < base*1.2) return 3;
+  if(val < base*1.4) return 4;
+  return 5;
+}
+
+function label(score){
+  if(score===1) return "⚪ Emerging Athlete";
+  if(score===2) return "🔹 Performance Athlete";
+  if(score===3) return "✅ Operational Ready";
+  if(score===4) return "⭐ Elite Operator";
+  if(score===5) return "🔥 Special Forces Target";
+  return "";
+}
+
+function overallLabel(avg){
+  if(avg < 1.5) return "REBOOT";
