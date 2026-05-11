@@ -58,7 +58,13 @@ input, select {
 <div id="intro">
 <div class="introBox">
 <p>
-All exercises are performed for 2 minutes.<br><br>
+Welcome to the Selection Protocol.<br><br>
+
+This fitness assessment is based on real military standards:<br><br>
+
+ACFT – U.S. Army Combat Fitness Test<br>
+PST – Special Forces Screening Test<br><br>
+
 Strength • Endurance • Conditioning
 </p>
 </div>
@@ -69,162 +75,8 @@ Strength • Endurance • Conditioning
 <!-- INPUT -->
 <div id="inputScreen" class="hidden">
 
-<h2>ENTER DETAILS</h2>
+<h2>RESULT INPUT</h2>
 
 <p>Push-Ups (2 min)</p><input id="push">
 <p>Sit-Ups (2 min)</p><input id="sit">
 <p>Squats (2 min)</p><input id="squat">
-<p>Shuttle Run (2 min)</p><input id="run">
-
-<br><br>
-
-<button onclick="goFinal()">SUBMIT</button>
-
-</div>
-
-<!-- FINAL -->
-<div id="finalScreen" class="hidden">
-
-<h2>FINAL PHASE</h2>
-
-<h1 id="timer">00:00</h1>
-
-<button onclick="startTimer()">START</button>
-<button onclick="stopTimer()">STOP</button>
-
-</div>
-
-<!-- RESULT -->
-<div id="resultScreen" class="hidden">
-
-<h2>RESULT</h2>
-
-<div class="resultBox">
-<p id="resultText"></p>
-</div>
-
-</div>
-
-<script>
-
-let plank = 0;
-let timer = null;
-
-/* ✅ SAFE NAVIGATION (NEVER BREAKS) */
-function start(){
-  document.getElementById("intro").style.display="none";
-  document.getElementById("inputScreen").style.display="block";
-}
-
-function goFinal(){
-  document.getElementById("inputScreen").style.display="none";
-  document.getElementById("finalScreen").style.display="block";
-}
-
-/* TIMER */
-function startTimer(){
-  if(timer) return;
-
-  plank = 0;
-
-  timer = setInterval(function(){
-    plank++;
-
-    let m = Math.floor(plank/60);
-    let s = plank % 60;
-
-    document.getElementById("timer").innerText =
-      (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
-
-  },1000);
-}
-
-/* ✅ SAFE STOP (ERROR PROTECTED) */
-function stopTimer(){
-
-  clearInterval(timer);
-
-  try {
-
-    let push = Number(document.getElementById("push").value) || 0;
-    let sit = Number(document.getElementById("sit").value) || 0;
-    let squat = Number(document.getElementById("squat").value) || 0;
-    let run = Number(document.getElementById("run").value) || 0;
-
-    function score(val, base){
-      if(val < base*0.3) return 0;
-      if(val < base*0.7) return 1;
-      if(val < base) return 2;
-      if(val < base*1.2) return 3;
-      if(val < base*1.4) return 4;
-      return 5;
-    }
-
-    function shuttleScore(val){
-      if(val < 3) return 0;
-      if(val <=5) return 1;
-      if(val <=7) return 2;
-      if(val <=11) return 3;
-      if(val <=14) return 4;
-      return 5;
-    }
-
-    function plankScore(sec){
-      if(sec < 45) return 0;
-      if(sec <=104) return 1;
-      if(sec <=149) return 2;
-      if(sec <=179) return 3;
-      if(sec <=209) return 4;
-      return 5;
-    }
-
-    function label(s){
-      if(s==0) return "🔻 Below Standard";
-      if(s==1) return "⚪ Emerging Athlete";
-      if(s==2) return "🔹 Performance Athlete";
-      if(s==3) return "✅ Mission Ready";
-      if(s==4) return "⭐ Elite Operator";
-      if(s==5) return "🔥 Special Forces Target";
-    }
-
-    let ps = score(push,40);
-    let ss = score(sit,55);
-    let qs = score(squat,60);
-    let rs = shuttleScore(run);
-    let pls = plankScore(plank);
-
-    let avg = (ps+ss+qs+rs+pls)/5;
-
-    document.getElementById("finalScreen").style.display="none";
-    document.getElementById("resultScreen").style.display="block";
-
-    let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
-                : avg<3.5 ? "✅ MISSION READY"
-                : avg<4.5 ? "⭐ ELITE OPERATOR"
-                : "🔥 SPECIAL FORCES TARGET";
-
-    resultText.innerHTML =
-    "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br><br>"+
-
-    "Push-Ups: "+push+" → "+label(ps)+"<br>"+
-    "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
-    "Squats: "+squat+" → "+label(qs)+"<br>"+
-    "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
-    "Plank: "+plank+" sec → "+label(pls);
-
-  } catch (err) {
-
-    /* ✅ NEVER BREAK APP AGAIN */
-    document.getElementById("finalScreen").style.display="none";
-    document.getElementById("resultScreen").style.display="block";
-
-    resultText.innerHTML =
-    "<b>Something went wrong — please retry.</b>";
-
-  }
-}
-
-</script>
-
-</body>
-</html>
