@@ -36,7 +36,7 @@ button {
   border-radius:10px;
 }
 
-input {
+input, select {
   font-size:42px;
   padding:12px;
   width:220px;
@@ -49,23 +49,17 @@ input {
 
 <script>
 
-/* ✅ DEFINE FUNCTIONS FIRST (CRITICAL FIX) */
-
 let plank = 0;
 let timer = null;
 
 function start(){
- try{
-  document.getElementById("intro").style.display="none";
-  document.getElementById("inputScreen").style.display="block";
- } catch(e){}
+ document.getElementById("intro").style.display="none";
+ document.getElementById("inputScreen").style.display="block";
 }
 
 function goFinal(){
- try{
-  document.getElementById("inputScreen").style.display="none";
-  document.getElementById("finalScreen").style.display="block";
- } catch(e){}
+ document.getElementById("inputScreen").style.display="none";
+ document.getElementById("finalScreen").style.display="block";
 }
 
 function startTimer(){
@@ -90,116 +84,114 @@ function stopTimer(){
 
  try{
 
+ let age = Number(document.getElementById("age").value) || 30;
+ let sex = document.getElementById("sex").value;
+
  let push=Number(document.getElementById("push").value)||0;
  let sit=Number(document.getElementById("sit").value)||0;
  let squat=Number(document.getElementById("squat").value)||0;
  let run=Number(document.getElementById("run").value)||0;
 
-/* SCORING */
-function score(val, base){
- if(val < base*0.3) return 0;
- if(val < base*0.7) return 1;
- if(val < base) return 2;
- if(val < base*1.2) return 3;
- if(val < base*1.4) return 4;
- return 5;
-}
+ /* ✅ AGE + SEX FACTOR */
+ let factor = 1;
 
-function shuttleScore(val){
- if(val < 3) return 0;
- if(val <=5) return 1;
- if(val <=7) return 2;
- if(val <=11) return 3;
- if(val <=14) return 4;
- return 5;
-}
+ if(sex === "female") factor *= 0.85;
+ if(age >= 40 && age < 50) factor *= 0.9;
+ if(age >= 50) factor *= 0.8;
 
-function plankScore(sec){
- if(sec < 45) return 0;
- if(sec <=104) return 1;
- if(sec <=149) return 2;
- if(sec <=179) return 3;
- if(sec <=209) return 4;
- return 5;
-}
+ /* ✅ ADJUSTED BASELINES */
+ let pushBase = 40 * factor;
+ let sitBase = 55 * factor;
+ let squatBase = 60 * factor;
 
-function label(s){
- if(s==0) return "⚪ Keep going — try harder next time";
- if(s==1) return "⚪ Emerging Athlete";
- if(s==2) return "🔹 Performance Athlete";
- if(s==3) return "✅ Mission Ready";
- if(s==4) return "⭐ Elite Operator";
- if(s==5) return "🔥 Special Forces Target";
-}
+ function score(val, base){
+  if(val < base*0.3) return 0;
+  if(val < base*0.7) return 1;
+  if(val < base) return 2;
+  if(val < base*1.2) return 3;
+  if(val < base*1.4) return 4;
+  return 5;
+ }
 
-/* APPLY BASELINES */
-let ps=score(push,40);
-let ss=score(sit,55);
-let qs=score(squat,60);
-let rs=shuttleScore(run);
-let pls=plankScore(plank);
+ function shuttleScore(val){
+  if(val < 3) return 0;
+  if(val <=5) return 1;
+  if(val <=7) return 2;
+  if(val <=11) return 3;
+  if(val <=14) return 4;
+  return 5;
+ }
 
-let avg=(ps+ss+qs+rs+pls)/5;
+ function plankScore(sec){
+  if(sec < 45) return 0;
+  if(sec <=104) return 1;
+  if(sec <=149) return 2;
+  if(sec <=179) return 3;
+  if(sec <=209) return 4;
+  return 5;
+ }
 
-document.getElementById("finalScreen").style.display="none";
-document.getElementById("resultScreen").style.display="block";
+ function label(s){
+  if(s==0) return "⚪ Keep going — try harder next time";
+  if(s==1) return "⚪ Emerging Athlete";
+  if(s==2) return "🔹 Performance Athlete";
+  if(s==3) return "✅ Mission Ready";
+  if(s==4) return "⭐ Elite Operator";
+  if(s==5) return "🔥 Special Forces Target";
+ }
 
-/* ✅ SYSTEM REBOOT */
-if(avg < 1){
+ let ps=score(push,pushBase);
+ let ss=score(sit,sitBase);
+ let qs=score(squat,squatBase);
+ let rs=shuttleScore(run);
+ let pls=plankScore(plank);
 
-resultText.innerHTML =
-"<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
-"Minimal movement detected<br>"+
-"Physical systems appear to be in sleep mode.<br><br>"+
-"<b>Recommendation:</b><br>"+
-"• Move more<br>"+
-"• Start small<br>"+
-"• Try again soon<br><br>"+
-"Let’s get those systems online.";
+ let avg=(ps+ss+qs+rs+pls)/5;
 
-return;
-}
+ document.getElementById("finalScreen").style.display="none";
+ document.getElementById("resultScreen").style.display="block";
 
-/* OVERALL */
-let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
-           : avg<3.5 ? "✅ MISSION READY"
-           : avg<4.5 ? "⭐ ELITE OPERATOR"
-           : "🔥 SPECIAL FORCES TARGET";
+ /* SYSTEM REBOOT */
+ if(avg < 1){
+  resultText.innerHTML =
+  "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
+  "Minimal movement detected<br>"+
+  "Physical systems appear to be in sleep mode.<br><br>"+
+  "Move more • Start small • Try again";
+  return;
+ }
 
-/* BADGE */
-let badge = overall.includes("MISSION") ? "🏆 MISSION READY"
-         : overall.includes("ELITE") ? "🏆 ELITE OPERATOR"
-         : overall.includes("SPECIAL") ? "🏆 SPECIAL FORCES"
-         : "🏆 PERFORMANCE ATHLETE";
+ let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
+             : avg<3.5 ? "✅ MISSION READY"
+             : avg<4.5 ? "⭐ ELITE OPERATOR"
+             : "🔥 SPECIAL FORCES TARGET";
 
-/* NEXT TARGET */
-function next(avg){
- if(avg<2.5) return "✅ MISSION READY";
- if(avg<3.5) return "⭐ ELITE OPERATOR";
- return "🔥 SPECIAL FORCES TARGET";
-}
+ function next(avg){
+  if(avg<2.5) return "✅ MISSION READY";
+  if(avg<3.5) return "⭐ ELITE OPERATOR";
+  return "🔥 SPECIAL FORCES TARGET";
+ }
 
-function improve(val, base){
- return Math.max(0, Math.ceil(base*1.2 - val));
-}
+ function improve(val, base){
+  return Math.max(0, Math.ceil(base*1.2 - val));
+ }
 
-resultText.innerHTML =
-"<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br><br>"+
+ resultText.innerHTML =
 
-"<b>"+badge+"</b><br><br>"+
+ "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br><br>"+
 
-"Push-Ups: "+push+" → "+label(ps)+"<br>"+
-"Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
-"Squats: "+squat+" → "+label(qs)+"<br>"+
-"Shuttle Run: "+run+" → "+label(rs)+"<br>"+
-"Plank: "+plank+" sec → "+label(pls)+"<br><br>"+
+ "Push-Ups: "+push+" → "+label(ps)+"<br>"+
+ "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
+ "Squats: "+squat+" → "+label(qs)+"<br>"+
+ "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
+ "Plank: "+plank+" sec → "+label(pls)+"<br><br>"+
 
-"<b>Next Target: "+next(avg)+"</b><br>"+
-"+ "+improve(push,40)+" Push-Ups<br>"+
-"+ "+improve(sit,55)+" Sit-Ups<br>"+
-"+ "+improve(plank,150)+" sec Plank";
+ "<b>Next Target: "+next(avg)+"</b><br>"+
+ "+ "+improve(push,pushBase)+" Push-Ups<br>"+
+ "+ "+improve(sit,sitBase)+" Sit-Ups<br>"+
+ "+ "+improve(plank,150)+" sec Plank";
 
- } catch(e){
+ }catch(e){
   resultText.innerHTML="Error — please retry";
  }
 
@@ -233,12 +225,24 @@ Strength • Endurance • Conditioning
 </div>
 
 <div id="inputScreen" class="hidden">
+
+<h2>ENTER DETAILS</h2>
+
+<p>Age</p>
+<input id="age">
+
+<p>Sex</p>
+<select id="sex">
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+
 <h2>RESULT INPUT</h2>
 
-<p>Push-Ups (2 min)</p><input id="push">
-<p>Sit-Ups (2 min)</p><input id="sit">
-<p>Squats (2 min)</p><input id="squat">
-<p>Shuttle Run (2 min)</p><input id="run">
+<p>Push-Ups</p><input id="push">
+<p>Sit-Ups</p><input id="sit">
+<p>Squats</p><input id="squat">
+<p>Shuttle Run</p><input id="run">
 
 <br><br>
 <button onclick="goFinal()">SUBMIT</button>
@@ -246,8 +250,6 @@ Strength • Endurance • Conditioning
 
 <div id="finalScreen" class="hidden">
 <h2>FINAL PHASE</h2>
-<p>CORE STABILITY TEST</p>
-
 <h1 id="timer">00:00</h1>
 
 <button onclick="startTimer()">START</button>
