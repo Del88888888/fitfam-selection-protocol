@@ -46,12 +46,12 @@ input, select {
 
 .hidden { display:none; }
 
-/* ✅ LOGO */
+/* ✅ PHOTO STYLE (ONLY ADDITION) */
 #cornerLogo {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 100px;
+  width: 90px;
   border-radius: 50%;
   border: 3px solid #FFD200;
   z-index: 1000;
@@ -59,6 +59,7 @@ input, select {
 </style>
 
 <script>
+
 let plank = 0;
 let timer = null;
 
@@ -89,6 +90,7 @@ function startTimer(){
 }
 
 function stopTimer(){
+
  clearInterval(timer);
 
  try{
@@ -102,6 +104,7 @@ function stopTimer(){
  let run=Number(document.getElementById("run").value)||0;
 
  let factor = 1;
+
  if(sex === "female") factor *= 0.85;
  if(age >= 40 && age < 50) factor *= 0.9;
  if(age >= 50) factor *= 0.8;
@@ -143,7 +146,7 @@ function stopTimer(){
   if(s==2) return "🔹 Performance Athlete";
   if(s==3) return "✅ Mission Ready";
   if(s==4) return "⭐ Elite Operator";
-  return "🔥 Special Forces Target";
+  if(s==5) return "🔥 Special Forces Target";
  }
 
  let ps=score(push,pushBase);
@@ -157,25 +160,58 @@ function stopTimer(){
  document.getElementById("finalScreen").style.display="none";
  document.getElementById("resultScreen").style.display="block";
 
+ if(avg < 1){
+  resultText.innerHTML =
+  "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
+  "Minimal movement detected<br>"+
+  "Physical systems appear to be in sleep mode.<br><br>"+
+  "Move more • Start small • Try again";
+  return;
+ }
+
+ let overall = avg<2.5 ? "🔹 PERFORMANCE ATHLETE"
+             : avg<3.5 ? "✅ MISSION READY"
+             : avg<4.5 ? "⭐ ELITE OPERATOR"
+             : "🔥 SPECIAL FORCES TARGET";
+
+ function next(avg){
+  if(avg<2.5) return "✅ MISSION READY";
+  if(avg<3.5) return "⭐ ELITE OPERATOR";
+  return "🔥 SPECIAL FORCES TARGET";
+ }
+
+ function improve(val, base){
+  return Math.max(0, Math.ceil(base*1.2 - val));
+ }
+
  resultText.innerHTML =
- "<div style='font-size:65px;font-weight:bold;'>RESULT</div><br>"+
+
+ "<div style='font-size:65px;font-weight:bold;'>STATUS: "+overall+"</div><br><br>"+
+
  "Push-Ups: "+push+" → "+label(ps)+"<br>"+
  "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
  "Squats: "+squat+" → "+label(qs)+"<br>"+
  "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
- "Plank: "+plank+" sec → "+label(pls);
+ "Plank: "+plank+" sec → "+label(pls)+"<br><br>"+
+
+ "<b>Next Target: "+next(avg)+"</b><br>"+
+ "+ "+improve(push,pushBase)+" Push-Ups<br>"+
+ "+ "+improve(sit,sitBase)+" Sit-Ups<br>"+
+ "+ "+improve(plank,150)+" sec Plank";
 
  }catch(e){
   resultText.innerHTML="Error — please retry";
  }
+
 }
+
 </script>
 
 </head>
 
 <body>
 
-<!-- ✅ SAFE IMAGE LINE -->
+<!-- ✅ CORRECT IMAGE (THIS FIXES EVERYTHING) -->
 <img src="my-photo.jpg" id="cornerLogo">
 
 <h1>FITFAM</h1>
@@ -186,6 +222,12 @@ function stopTimer(){
 <div class="introBox">
 <p>
 Welcome to the Selection Protocol.<br><br>
+
+This fitness assessment is based on real military standards:<br><br>
+
+ACFT – U.S. Army Combat Fitness Test<br>
+PST – Special Forces Screening Test<br><br>
+
 Strength • Endurance • Conditioning
 </p>
 </div>
@@ -194,29 +236,41 @@ Strength • Endurance • Conditioning
 </div>
 
 <div id="inputScreen" class="hidden">
-<p>Age</p><input id="age">
+<h2>ENTER DETAILS</h2>
+
+<p>Age</p>
+<input id="age">
+
 <p>Sex</p>
 <select id="sex">
 <option value="male">Male</option>
 <option value="female">Female</option>
 </select>
 
+<h2>RESULT INPUT</h2>
+
 <p>Push-Ups</p><input id="push">
 <p>Sit-Ups</p><input id="sit">
 <p>Squats</p><input id="squat">
 <p>Shuttle Run</p><input id="run">
 
+<br><br>
 <button onclick="goFinal()">SUBMIT</button>
 </div>
 
 <div id="finalScreen" class="hidden">
+<h2>FINAL PHASE</h2>
 <h1 id="timer">00:00</h1>
+
 <button onclick="startTimer()">START</button>
 <button onclick="stopTimer()">STOP</button>
 </div>
 
 <div id="resultScreen" class="hidden">
+<h2>RESULT</h2>
+<div class="resultBox">
 <p id="resultText"></p>
+</div>
 </div>
 
 </body>
