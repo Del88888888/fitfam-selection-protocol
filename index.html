@@ -46,7 +46,7 @@ input, select {
 
 .hidden { display:none; }
 
-/* ✅ LOGO FIX */
+/* ✅ LOGO */
 #cornerLogo {
   position: fixed;
   top: 20px;
@@ -59,7 +59,6 @@ input, select {
 </style>
 
 <script>
-
 let plank = 0;
 let timer = null;
 
@@ -70,3 +69,155 @@ function start(){
 
 function goFinal(){
  document.getElementById("inputScreen").style.display="none";
+ document.getElementById("finalScreen").style.display="block";
+}
+
+function startTimer(){
+ if(timer) return;
+
+ plank=0;
+
+ timer=setInterval(function(){
+  plank++;
+
+  let m=Math.floor(plank/60);
+  let s=plank%60;
+
+  document.getElementById("timer").innerText =
+  (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+ },1000);
+}
+
+function stopTimer(){
+ clearInterval(timer);
+
+ try{
+
+ let age = Number(document.getElementById("age").value) || 30;
+ let sex = document.getElementById("sex").value;
+
+ let push=Number(document.getElementById("push").value)||0;
+ let sit=Number(document.getElementById("sit").value)||0;
+ let squat=Number(document.getElementById("squat").value)||0;
+ let run=Number(document.getElementById("run").value)||0;
+
+ let factor = 1;
+ if(sex === "female") factor *= 0.85;
+ if(age >= 40 && age < 50) factor *= 0.9;
+ if(age >= 50) factor *= 0.8;
+
+ let pushBase = 40 * factor;
+ let sitBase = 55 * factor;
+ let squatBase = 60 * factor;
+
+ function score(val, base){
+  if(val < base*0.3) return 0;
+  if(val < base*0.7) return 1;
+  if(val < base) return 2;
+  if(val < base*1.2) return 3;
+  if(val < base*1.4) return 4;
+  return 5;
+ }
+
+ function shuttleScore(val){
+  if(val < 3) return 0;
+  if(val <=5) return 1;
+  if(val <=7) return 2;
+  if(val <=11) return 3;
+  if(val <=14) return 4;
+  return 5;
+ }
+
+ function plankScore(sec){
+  if(sec < 45) return 0;
+  if(sec <=104) return 1;
+  if(sec <=149) return 2;
+  if(sec <=179) return 3;
+  if(sec <=209) return 4;
+  return 5;
+ }
+
+ function label(s){
+  if(s==0) return "⚪ Keep going — try harder next time";
+  if(s==1) return "⚪ Emerging Athlete";
+  if(s==2) return "🔹 Performance Athlete";
+  if(s==3) return "✅ Mission Ready";
+  if(s==4) return "⭐ Elite Operator";
+  return "🔥 Special Forces Target";
+ }
+
+ let ps=score(push,pushBase);
+ let ss=score(sit,sitBase);
+ let qs=score(squat,squatBase);
+ let rs=shuttleScore(run);
+ let pls=plankScore(plank);
+
+ let avg=(ps+ss+qs+rs+pls)/5;
+
+ document.getElementById("finalScreen").style.display="none";
+ document.getElementById("resultScreen").style.display="block";
+
+ resultText.innerHTML =
+ "<div style='font-size:65px;font-weight:bold;'>RESULT</div><br>"+
+ "Push-Ups: "+push+" → "+label(ps)+"<br>"+
+ "Sit-Ups: "+sit+" → "+label(ss)+"<br>"+
+ "Squats: "+squat+" → "+label(qs)+"<br>"+
+ "Shuttle Run: "+run+" → "+label(rs)+"<br>"+
+ "Plank: "+plank+" sec → "+label(pls);
+
+ }catch(e){
+  resultText.innerHTML="Error — please retry";
+ }
+}
+</script>
+
+</head>
+
+<body>
+
+<!-- ✅ SAFE IMAGE LINE -->
+<img src="my-photo.jpg" id="cornerLogo">
+
+<h1>FITFAM</h1>
+<h2>SELECTION PROTOCOL</h2>
+<h3>CODENAME: ZERO HOUR // 10 MINS+</h3>
+
+<div id="intro">
+<div class="introBox">
+<p>
+Welcome to the Selection Protocol.<br><br>
+Strength • Endurance • Conditioning
+</p>
+</div>
+
+<button onclick="start()">BEGIN ASSESSMENT</button>
+</div>
+
+<div id="inputScreen" class="hidden">
+<p>Age</p><input id="age">
+<p>Sex</p>
+<select id="sex">
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+
+<p>Push-Ups</p><input id="push">
+<p>Sit-Ups</p><input id="sit">
+<p>Squats</p><input id="squat">
+<p>Shuttle Run</p><input id="run">
+
+<button onclick="goFinal()">SUBMIT</button>
+</div>
+
+<div id="finalScreen" class="hidden">
+<h1 id="timer">00:00</h1>
+<button onclick="startTimer()">START</button>
+<button onclick="stopTimer()">STOP</button>
+</div>
+
+<div id="resultScreen" class="hidden">
+<p id="resultText"></p>
+</div>
+
+</body>
+</html>
