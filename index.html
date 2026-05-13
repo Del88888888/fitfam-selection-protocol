@@ -45,6 +45,17 @@ input, select {
 }
 
 .hidden { display:none; }
+
+/* ✅ CORNER IMAGE (NEW) */
+#cornerLogo {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 100px;
+  border-radius: 50%;
+  border: 3px solid #FFD200;
+  z-index: 1000;
+}
 </style>
 
 <script>
@@ -92,14 +103,12 @@ function stopTimer(){
  let squat=Number(document.getElementById("squat").value)||0;
  let run=Number(document.getElementById("run").value)||0;
 
- /* ✅ AGE + SEX FACTOR */
  let factor = 1;
 
  if(sex === "female") factor *= 0.85;
  if(age >= 40 && age < 50) factor *= 0.9;
  if(age >= 50) factor *= 0.8;
 
- /* ✅ ADJUSTED BASELINES */
  let pushBase = 40 * factor;
  let sitBase = 55 * factor;
  let squatBase = 60 * factor;
@@ -151,7 +160,6 @@ function stopTimer(){
  document.getElementById("finalScreen").style.display="none";
  document.getElementById("resultScreen").style.display="block";
 
- /* SYSTEM REBOOT */
  if(avg < 1){
   resultText.innerHTML =
   "<div style='font-size:65px;font-weight:bold;'>STATUS: SYSTEM REBOOT REQUIRED</div><br>"+
@@ -203,65 +211,3 @@ function stopTimer(){
 
 <body>
 
-<h1>FITFAM</h1>
-<h2>SELECTION PROTOCOL</h2>
-<h3>CODENAME: ZERO HOUR // 10 MINS+</h3>
-
-<div id="intro">
-<div class="introBox">
-<p>
-Welcome to the Selection Protocol.<br><br>
-
-This fitness assessment is based on real military standards:<br><br>
-
-ACFT – U.S. Army Combat Fitness Test<br>
-PST – Special Forces Screening Test<br><br>
-
-Strength • Endurance • Conditioning
-</p>
-</div>
-
-<button onclick="start()">BEGIN ASSESSMENT</button>
-</div>
-
-<div id="inputScreen" class="hidden">
-
-<h2>ENTER DETAILS</h2>
-
-<p>Age</p>
-<input id="age">
-
-<p>Sex</p>
-<select id="sex">
-<option value="male">Male</option>
-<option value="female">Female</option>
-</select>
-
-<h2>RESULT INPUT</h2>
-
-<p>Push-Ups</p><input id="push">
-<p>Sit-Ups</p><input id="sit">
-<p>Squats</p><input id="squat">
-<p>Shuttle Run</p><input id="run">
-
-<br><br>
-<button onclick="goFinal()">SUBMIT</button>
-</div>
-
-<div id="finalScreen" class="hidden">
-<h2>FINAL PHASE</h2>
-<h1 id="timer">00:00</h1>
-
-<button onclick="startTimer()">START</button>
-<button onclick="stopTimer()">STOP</button>
-</div>
-
-<div id="resultScreen" class="hidden">
-<h2>RESULT</h2>
-<div class="resultBox">
-<p id="resultText"></p>
-</div>
-</div>
-
-</body>
-</html>
