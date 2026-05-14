@@ -46,7 +46,6 @@ input, select {
 
 .hidden { display:none; }
 
-/* ✅ PHOTO STYLE (ONLY ADDITION) */
 #cornerLogo {
   position: fixed;
   top: 20px;
@@ -102,6 +101,23 @@ function stopTimer(){
  let sit=Number(document.getElementById("sit").value)||0;
  let squat=Number(document.getElementById("squat").value)||0;
  let run=Number(document.getElementById("run").value)||0;
+
+ /* ✅ AVENGERS MODE (NEW) */
+ if(push > 200 || sit > 200 || squat > 300 || plank > 600){
+  document.getElementById("finalScreen").style.display="none";
+  document.getElementById("resultScreen").style.display="block";
+
+  resultText.innerHTML = `
+  <div style='font-size:65px;font-weight:bold;'>STATUS: AVENGER</div><br><br>
+
+  Nick Fury and Black Widow have been notified.<br><br>
+
+  Stand by for off-world, intergalactic assignments.<br><br>
+
+  For now… stay low profile and stick to human range.
+  `;
+  return;
+ }
 
  let factor = 1;
 
@@ -211,7 +227,6 @@ function stopTimer(){
 
 <body>
 
-<!-- ✅ CORRECT IMAGE (THIS FIXES EVERYTHING) -->
 <img src="my-photo.jpg" id="cornerLogo">
 
 <h1>FITFAM</h1>
